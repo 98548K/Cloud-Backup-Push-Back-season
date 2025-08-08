@@ -1,0 +1,1 @@
+void drawPath(double path);
