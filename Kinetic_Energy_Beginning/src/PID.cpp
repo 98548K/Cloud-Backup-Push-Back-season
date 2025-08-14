@@ -38,7 +38,7 @@ double drivetrainWidth = 13;
 
 
 
-//Function for determining the turn direction. Credit to Caleb Carlson for making this function easy to find (https://www.vexforum.com/t/turning-with-pid-how-to-find-the-shortest-turn/110258/6)
+//Function for determining the turn direction. Credit to Caleb Carlson for making this function easy to find (https://www.vexforum.com/t/turning-with-pid-how-to-find-the-shortest-turn/110258/6):
 double constrainAngle(double x) {
     x = fmod(x + 180, 360);
     if (x < 0)
@@ -46,12 +46,12 @@ double constrainAngle(double x) {
     return x - 180;
 }
 
-//PID class initialization
+//PID class initialization:
 class PID {
-    //Declaring all instances in the class. (eg. PID math variables)
+    //Declaring all instances in the class. (eg. PID math variables):
     private:
-        //Declaring multiplication constants
-        //Declaring sensor math variables
+        //Declaring multiplication constants:
+        //Declaring sensor math variables:
         double desiredValue;
         double error;
         double integral;
@@ -62,13 +62,13 @@ class PID {
         double storedHeading;
         double resetCurrentPosition;
         double turnDifference;
-        //Declaring what instance of motor control it is
+        //Declaring what instance of motor control it is:
         bool isTurning;
         bool isDriving;
         bool isOdomDrive;
         bool isSlowDriving;
         bool isSlowOdomDrive;
-    //PID class parameter setup
+    //PID class parameter setup:
     public:
         PID(double DesiredValue, bool IsDriving, bool IsTurning, bool IsOdomDrive, bool IsSlowOdomDrive, bool IsSlowDriving) {
             desiredValue = DesiredValue;
@@ -83,22 +83,22 @@ class PID {
         void run() {
             integral = 0;
             error = 0;
-            //This accounts for the tracking wheel measuremants in PID
+            //This accounts for the tracking wheel measuremants in PID:
             storedTrackingMeasurements = frontTracking.position(turns);
 
             storedHeading = Inertial1.heading(deg);
             while (true) {
-                //This simmulates drive PID starting at 0
+                //This simmulates drive PID starting at 0:
                 resetCurrentPosition = frontTracking.position(turns) - storedTrackingMeasurements;
 
                 //This is nescessarry for odometry to work so we don't have to reset the forward/sideways tracking position.
-                //It instead starts where the tracking position is to 0 allowing it to use distance values instead of coordinate values
+                //It instead starts where the tracking position is to 0 allowing it to use distance values instead of coordinate values.
 
-                //PID math
+                //PID math:
                 integral += error;
                 //
 
-                //Stops using integral in the power once the condition is met
+                //Stops using integral in the power once the condition is met:
                 if (error <= turnTolerance && error >= turnTolerance  && isTurning) {
                     integral = 0;
                 }
@@ -108,17 +108,17 @@ class PID {
                     integral = 0;
                 }
 
-                //More PID math
+                //More PID math:
                 derivative = error - prevError;
                 prevError = error;
                 //
 
-                //Turn difference calculations for determing the distance between the left and right sides of the drivetrain
+                //Turn difference calculations for determing the distance between the left and right sides of the drivetrain:
                 turnDifference = 2 * ((drivetrainWidth / 2) * radianHeading) * (sin(radianHeading / 2));
 
                 
 
-                //Class initialization for turning
+                //Class initialization for turning:
                 if (isTurning) {
                     error = constrainAngle(desiredValue - Inertial1.heading(deg));
                     pwr = error * turnKP + integral * turnKI + derivative * turnKD;
@@ -128,13 +128,13 @@ class PID {
                     if (error >= -turnTolerance && error <= turnTolerance) break;
                 }
 
-                //If it messes up the acceleration or measurement values use this
+                //If it messes up the acceleration or measurement values use this:
                 //LeftDriveSmart.spin(fwd, pwr, pct);
                 //RightDriveSmart.spin(fwd, pwr, pct);
 
-                //Class initialization for driving
+                //Class initialization for driving:
                 else if (isDriving) {
-                    //This section is just drive PID
+                    //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
                     pwr = error * kP + integral * kI + derivative * kD;
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
@@ -149,7 +149,7 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-                //Class initialization for driving with odometry so it keeps track of the correct position of the tracking wheel only when it's only using odom
+                //Class initialization for driving with odometry so it keeps track of the correct position of the tracking wheel only when it's only using odom:
                 else if (isOdomDrive) {
                     error = desiredValue - frontTracking.position(turns) * (wheelRad * 2) * M_PI;
                     pwr = error * kP + integral * kI + derivative * kD;
@@ -181,7 +181,7 @@ class PID {
                 }
 
                 else if (isSlowDriving) {
-                    //This section is just slow drive PID
+                    //This section is just slow drive PID:
                     error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
                     pwr = error * slowKP + integral * slowKI + derivative * slowKD;
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
@@ -196,7 +196,7 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-                //Terminates if within tolerance
+                //Terminates if within tolerance:
                 if ((error >= -driveTolerance && error <= driveTolerance && (isDriving || isOdomDrive)) || (error <= turnTolerance && error >= -turnTolerance && isTurning)) break;
                 if (error == 0) break;
                 wait (15, msec);
@@ -206,31 +206,31 @@ class PID {
         }
 };
 
-//Drive PID function
+//Drive PID function:
 void driveIn(double driveDist) {
     PID drivePID(driveDist, true, false, false, false, false);
     drivePID.run();
 }
 
-//Turn PID function
+//Turn PID function:
 void turnToHeading(double turnHeading) {
     PID turnPID(turnHeading, false, true, false, false, false);
     turnPID.run();
 }
 
-//Drive PID function for odometry use so that it doesn't mess with encoder readings
+//Drive PID function for odometry use so that it doesn't mess with encoder readings:
 void driveInOdom(double driveDist) {
     PID odomDrivePID(driveDist, false, false, true, false, false);
     odomDrivePID.run();
 }
 
-//Slow odometry PID
+//Slow odometry PID:
 void slowDriveOdom(double driveDist) {
     PID odomDrivePID(driveDist, false, false, false, true, false);
     odomDrivePID.run();
 }
 
-//Slow drive PID
+//Slow drive PID:
 void slowDrive(double driveDist) {
     PID drivePID(driveDist, false, false, true, false, true);
     drivePID.run();

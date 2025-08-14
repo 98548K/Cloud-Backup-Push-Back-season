@@ -5,6 +5,7 @@
 #include <list>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #include "v5.h"
 #include "v5_vcs.h"

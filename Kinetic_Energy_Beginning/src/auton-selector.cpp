@@ -55,14 +55,14 @@ void quadrant4() {
 
 
 void field() {
-  //This is the field
+  //This is the field:
   Brain.Screen.setFillColor(black);
   Brain.Screen.drawRectangle(0, 0, 250, 240);
 }
 
 
 void selection() {
-  //This is the selection menu
+  //This is the selection menu:
   Brain.Screen.setPenColor(white);
   Brain.Screen.setFillColor(black);
   Brain.Screen.setFont(monoXL);
@@ -75,22 +75,22 @@ void selection() {
 
 
 void field_stripes() {
-  //This is the field stripes
+  //This is the field stripes:
   Brain.Screen.setPenColor(white);
   Brain.Screen.setFillColor(white);
-  //Left middle line
+  //Left middle line:
   Brain.Screen.drawLine(123, 0, 123, 240);
-  //Right middle line
+  //Right middle line:
   Brain.Screen.drawLine(127, 0, 127, 240);
 }
 
 
 void end_zones() {
-  //Red end zone
+  //Red end zone:
   Brain.Screen.setPenColor(red);
   Brain.Screen.setFillColor(black);
   Brain.Screen.drawRectangle(0, 95, 50, 50);
-  //Blue end zone
+  //Blue end zone:
   Brain.Screen.setPenColor(blue);
   Brain.Screen.setFillColor(black);
   Brain.Screen.drawRectangle(200, 95, 50, 50);
@@ -100,81 +100,81 @@ void end_zones() {
 
 
 void goals() {
-  //Top left to bottom right in the middle goal
+  //Top left to bottom right in the middle goal:
   Brain.Screen.setPenColor(white);
   Brain.Screen.setFillColor(transparent);
   Brain.Screen.drawLine(115, 100, 145, 130);
   Brain.Screen.drawLine(105, 110, 135, 140);
   Brain.Screen.drawLine(115, 100, 105, 110);
   Brain.Screen.drawLine(145, 130, 135, 140);
-  //Top right to bottom left in the middle goal
+  //Top right to bottom left in the middle goal:
   Brain.Screen.drawLine(145, 110, 115, 140);
   Brain.Screen.drawLine(135, 100, 105, 130);
   Brain.Screen.drawLine(145, 110, 135, 100);
   Brain.Screen.drawLine(115, 140, 105, 130);
-  //Top middle goal
+  //Top middle goal:
   Brain.Screen.drawRectangle(85, 35, 80, 15);
-  //Bottom middle goal
+  //Bottom middle goal:
   Brain.Screen.drawRectangle(85, 195, 80, 15);
 }
 
 //Weird formatting because that's just how cool we are.
 void block_things() {
-  //Red blocks
+  //Red blocks:
   Brain.Screen.setFillColor(red);
   Brain.Screen.setPenColor(red);
-    //End zone
+    //End zone:
   Brain.Screen.drawCircle(205, 105, 4);
   Brain.Screen.drawCircle(205, 115, 4);
   Brain.Screen.drawCircle(205, 125, 4);
   Brain.Screen.drawCircle(205, 135, 4);
-    //Surrounding goals
-      //Top
+    //Surrounding goals:
+      //Top:
   Brain.Screen.drawCircle(85, 80, 4);
   Brain.Screen.drawCircle(95, 80, 4);
   Brain.Screen.drawCircle(85, 90, 4);
-      //Bottom
+      //Bottom:
   Brain.Screen.drawCircle(85, 160, 4);
   Brain.Screen.drawCircle(95, 160, 4);
   Brain.Screen.drawCircle(85, 150, 4);
-    //Next to walls
-      //Top
+    //Next to walls:
+      //Top:
   Brain.Screen.drawCircle(190, 5, 4);
   Brain.Screen.drawCircle(200, 5, 4);
-      //Bottom
+      //Bottom:
   Brain.Screen.drawCircle(190, 234, 4);
   Brain.Screen.drawCircle(200, 234, 4);
-    //Under goals
+    //Under goals:
   Brain.Screen.drawCircle(120, 42, 4);
   Brain.Screen.drawCircle(110, 42, 4);
   Brain.Screen.drawCircle(120, 202, 4);
   Brain.Screen.drawCircle(110, 202, 4);
 
-  //Blue blocks
+  //Blue blocks:
   Brain.Screen.setFillColor(blue);
   Brain.Screen.setPenColor(blue);
-    //End zone
+    //End zone:
   Brain.Screen.drawCircle(44, 105, 4);
   Brain.Screen.drawCircle(44, 115, 4);
   Brain.Screen.drawCircle(44, 125, 4);
   Brain.Screen.drawCircle(44, 135, 4);
-    //Surrounding goals
-      //Top
+    //Surrounding goals:
+      //Top:
   Brain.Screen.drawCircle(165, 80, 4);
   Brain.Screen.drawCircle(155, 80, 4);
   Brain.Screen.drawCircle(165, 90, 4);
-      //Bottom
+      //Bottom:
   Brain.Screen.drawCircle(165, 160, 4);
   Brain.Screen.drawCircle(155, 160, 4);
   Brain.Screen.drawCircle(165, 150, 4);
-    //Next to walls
-      //Top
+    //Next to walls:
+      //Top:
   Brain.Screen.drawCircle(50, 5, 4);
   Brain.Screen.drawCircle(60, 5, 4);
-      //Bottom
+      //Bottom:
   Brain.Screen.drawCircle(50, 234, 4);
   Brain.Screen.drawCircle(60, 234, 4);
-    //Under goals
+    //Under goals:
   Brain.Screen.drawCircle(130, 42, 4);
   Brain.Screen.drawCircle(140, 42, 4);
   Brain.Screen.drawCircle(130, 202, 4);
@@ -185,17 +185,17 @@ void block_things() {
 void loader() {
   Brain.Screen.setFillColor(black);
   Brain.Screen.setPenColor(orange);
-  //Creates the hollowed loader effect
+  //Creates the hollowed loader effect:
   Brain.Screen.drawCircle(7, 42, 7);
   Brain.Screen.drawCircle(7, 202, 7);
   Brain.Screen.drawCircle(242, 42, 7);
   Brain.Screen.drawCircle(242, 202, 7);
-  //Red alliance side
+  //Red alliance side:
   Brain.Screen.setFillColor(blue);
   Brain.Screen.setPenColor(blue);
   Brain.Screen.drawCircle(7, 42, 4);
   Brain.Screen.drawCircle(7, 202, 4);
-  //Blue alliance side
+  //Blue alliance side:
   Brain.Screen.setFillColor(red);
   Brain.Screen.setPenColor(red);
   Brain.Screen.drawCircle(242, 42, 4);
@@ -203,7 +203,7 @@ void loader() {
 }
 
 
-//Keep layering in mind
+//Keep layering in mind.
 void graphics() {
   Brain.Screen.clearScreen();
   field();
@@ -252,7 +252,7 @@ void touch() {
         quadrant4();
         quadrant = 4;
       }
-      //Side menu touch screen code
+      //Side menu touch screen code:
       if (quadrant == 0) {
         quadrant0();
         if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() > 50 && Brain.Screen.yPosition() < 100) {
@@ -346,7 +346,7 @@ void touch() {
     Brain.Screen.printAt(251, 40, "                ");
     Brain.Screen.printAt(251, 40, auton);
     if (isCalibrated && !ranOnce) {
-      //Try this next time I have a brain in my possesion
+      //Try this next time I have a brain in my possesion:
       //Brain.Screen.setTouchEventCallback(nullptr);
       Inertial1.calibrate();
       Brain.Screen.printAt(251, 140, "3           ");
