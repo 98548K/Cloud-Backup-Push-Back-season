@@ -56,8 +56,8 @@ void usercontrol(void) {
         }*/
 
 
-    Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print(colorSortColor);
+    //Controller1.Screen.setCursor(3, 1);
+    //Controller1.Screen.print(colorSortColor);
     wait(20, msec); 
                     
   }

@@ -12,15 +12,15 @@ controller Controller1 = controller(primary);
 
 
 motor LF = motor(PORT11, ratio6_1, true);
-motor LB = motor(PORT12, ratio6_1, true);
+motor LB = motor(PORT17, ratio6_1, true);
 motor_group LeftDriveSmart = motor_group(LF, LB);
 motor RF = motor(PORT20, ratio6_1, false);
 motor RB = motor(PORT1, ratio6_1, false);
 motor_group RightDriveSmart = motor_group(RF, RB);
-inertial Inertial1 = inertial(PORT18);
+inertial Inertial1 = inertial(PORT9);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 299.24, 320, 40, mm, 0.75);
-rotation frontTracking = rotation(PORT2, true);
-rotation sideTracking = rotation(PORT13, true);
+rotation frontTracking = rotation(PORT10, true);
+rotation sideTracking = rotation(PORT14, true);
 
 
 bool RemoteControlCodeEnabled = true;

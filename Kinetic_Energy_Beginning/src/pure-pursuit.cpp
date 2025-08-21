@@ -1,17 +1,30 @@
 #include "vex.h"
 
+void curvature(double pX, double pY) {
+    while (true) {
+        double turnError = constrainAngle(Inertial1.heading(deg) - atan2(pX - X, pY - Y));
+        double turnVel = turnError * turnKP;
+        double Ll = (50 + turnVel);
+        double Lr = (50 - turnVel);
+        LeftDriveSmart.spin(fwd, Ll, pct);
+        RightDriveSmart.spin(fwd, Lr, pct);
+        if (getDistance(X, Y, pX, pY) < 2) break;
+
+        wait (20, msec);
+    }
+}
 
 void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
     //Variable declaration:
 
     //Lookahead distance constant declaration for finding the point of intersection on the path.
-    const double lookaheadDistance = 50;
+    double lookaheadDistance = 1;
     //Iterating factor.
     int i = 0;
     
     //Both pathPoints are the coordinates for the point of intersection on the lookahead circle.
-    double pathPointX = 0.0;
-    double pathPointY = 0.0;
+    double pathPointX = pathX[1];
+    double pathPointY = pathY[1];
 
     //Angle vector is used in the turn error formula.
     std::vector<double> angleVector;
@@ -37,6 +50,10 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
     double prevLinearError;
     double prevTurnError;
 
+    //Motor power calculations for each side will help calculate curvature.
+    double Ll;
+    double Lr;
+
     //Time values will replicate ticker behavior.
     double prevTime;
     double deltaTime;
@@ -44,7 +61,7 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
 
     while (true) {
         //Path following math:
-
+        /*
         //Will check to see if the current iteration of the checked point on the path
         //has intersected with the circle and will continue iterating until intersection.
         if ((std::round((((X - pathX[i]) * (X - pathX[i])) + ((Y - pathY[i]) * (Y - pathY[i]))))) > lookaheadDistance) {
@@ -72,18 +89,17 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
         }
         //Failsafe for making sure the robot stops moving if it's within the goal point.
         else if ((std::round(getDistance(X, Y, pathX.size(), pathY.size()))) == 0) break;
-
+        */
         //Curvature:
+        lookaheadDistance = getDistance(pathX[i], pathY[i], pathPointX, pathPointY);
 
         //Angle vector:
         angleVector = {pathPointX - X, pathPointY - Y};
 
         //Errors:
         linearError = getDistance(X, Y, pathPointX, pathPointY);
-        turnError = constrainAngle(Inertial1.heading(deg) - atan2(pathPointX - X, pathPointY - Y));
-
         //Radius of the arc the robot is travelling:
-        pursuitArcRadius = (lookaheadDistance/2)/sin(turnError);
+        pursuitArcRadius = (lookaheadDistance/2) / sin(turnError);
 
         //Integral calculations:
         linearIntegral += linearError;
@@ -95,16 +111,21 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
 
         //Linear and turn velocity
         linearVel = linearError * kP + linearIntegral * kI + linearDerivative * kD;
-        turnVel = turnError * turnKP + turnIntegral * turnKI + turnDerivative * turnKD;
 
         //Previous updates for derivative:
         prevLinearError = linearError;
         prevTurnError = turnError;
         
-        LeftDriveSmart.spin(fwd, (linearVel - turnVel), pct);
-        RightDriveSmart.spin(fwd, (linearVel + turnVel), pct);
+
+        i += 1;
+        if (i > pathX.size()) break;
+        pathPointX = pathX[i + 1];
+        pathPointY = pathY[i + 1];
+        //curveToPosition(pathPointX, pathPointY);
 
         //This value should be the same as the ticker in the simulation.
         wait (20, msec);
     }
+    LeftDriveSmart.stop();
+    RightDriveSmart.stop();
 }

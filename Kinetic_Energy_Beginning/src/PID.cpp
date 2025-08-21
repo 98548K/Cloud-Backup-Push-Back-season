@@ -14,7 +14,7 @@ double clawKp = 0.0;//0.0
 double clawKi = 0.0;//0.0
 double clawKd = 0.0;//0.0
 
-double kP = 0.0;//0.0
+double kP = 1.0;//0.0
 double kI = 0.0;//0.0
 double kD = 0.0;//0.0
 
@@ -22,19 +22,20 @@ double slowKP = 0.0;//0.0
 double slowKI = 0.0;//0.0
 double slowKD = 0.0;//0.0
 
-double turnKP = 0.0;//0.0
+double turnKP = 0.07;//0.0
 double turnKI = 0.0;//0.0
 double turnKD = 0.0;//0.0
 
-double wheelRad = 0.0;//0.0
+double wheelRad = 1.0;//0.0
 
-double turnTolerance = 0.0;//0.0
-double driveTolerance = 0.0;//0.0
+double turnTolerance = 0.3;//0.0
+double driveTolerance = 0.3;//0.0
 
 double driveIntegralLimit = 10.0;//20.0
 double turnIntegralLimit = 30.0;//30.0
 
-double drivetrainWidth = 13;
+const double drivetrainWidth = 12.0;//↔
+const double drivetrainLength = 13.5;//↕
 
 
 
@@ -232,6 +233,6 @@ void slowDriveOdom(double driveDist) {
 
 //Slow drive PID:
 void slowDrive(double driveDist) {
-    PID drivePID(driveDist, false, false, true, false, true);
+    PID drivePID(driveDist, false, false, false, false, true);
     drivePID.run();
 }

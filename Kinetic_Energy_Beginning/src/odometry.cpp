@@ -1,5 +1,7 @@
 #include "vex.h"
 
+using namespace std;
+
 //Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
 //Horizontal distance from the side of the forward/backward tracking wheel to center:
 const double horizontalTrackingCenter = -1.75;
@@ -36,6 +38,12 @@ double deltaArcLength;
 double arcRadius;
 double deltaRadius;
 double targetOrientation;
+
+//Robot hitbox variables:
+double r1;
+double r2;
+double r3;
+double r4;
 
 /*
 
@@ -81,7 +89,7 @@ int positionTracking() {
         else {
             //Depending on the tracking wheel placement, the tracking distances may need to be changed. It's basically just adding or subtracting from the tracking positions on the grid.
             XCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaSIDE_WHEEL / deltaRadianHeading) + horizontalTrackingCenter);
-            YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter); 
+            YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter);
         }
 
         deltaX = (YCalculation * sin(averageRadianHeading)) + (XCalculation * cos(averageRadianHeading));
@@ -97,18 +105,47 @@ int positionTracking() {
         //Previous values:
         prevX = X;
         prevY = Y;
+
         prevRadianHeading = radianHeading;
         prevFRONT_WHEEL = FRONT_WHEEL;
         prevSIDE_WHEEL = SIDE_WHEEL;
 
-        std::cout << "X: " << X << "   Y: " << Y << std::endl;
+        //std::cout << "X: " << X << "   Y: " << Y << std::endl;
+
+        Controller1.Screen.setCursor(1, 1);
+        Controller1.Screen.print("(");
+        Controller1.Screen.print(X);
+        Controller1.Screen.print(", ");
+        Controller1.Screen.print(Y);
+        Controller1.Screen.print(")");
+        Controller1.Screen.setCursor(2, 1);
+        Controller1.Screen.print("(");
+        Controller1.Screen.print(leftDriveX);
+        Controller1.Screen.print(", ");
+        Controller1.Screen.print(leftDriveY);
+        Controller1.Screen.print(")");
+        Controller1.Screen.setCursor(3, 1);
+        Controller1.Screen.print("(");
+        Controller1.Screen.print(rightDriveX);
+        Controller1.Screen.print(", ");
+        Controller1.Screen.print(rightDriveY);
+        Controller1.Screen.print(")");
+
+
+        double leftDriveCenterX = X + sqrt(drivetrainWidth / 2) * cos(Inertial1.heading(deg));
+        double leftDriveCenterY = Y + sqrt(drivetrainWidth / 2) * sin(Inertial1.heading(deg));
+
+        double rightDriveCenterX = X + sqrt(drivetrainWidth / 2) * cos(Inertial1.heading(deg));
+        double rightDriveCenterY = Y + sqrt(drivetrainWidth / 2) * sin(Inertial1.heading(deg));
+
+
         //wait (25, msec);
         task::sleep(10);
     }
     return 0;
 }
 
-//Function for calculating the distance from both axes. First two parameters are where it's at, second parameters are where it needs to be. Credit to Kassidy Mickelson.
+//Function for calculating the distance from both axies. First two parameters are where it's at, second parameters are where it needs to be. Credit to Kassidy Mickelson.
 
 /*
 Square the difference between the x values.

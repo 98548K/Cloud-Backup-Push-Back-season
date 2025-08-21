@@ -1,4 +1,6 @@
 extern double wheelRad;
+extern const double drivetrainWidth;
+extern const double drivetrainLength;
 
 void driveIn(double driveDist);
 

@@ -20,6 +20,7 @@
 #include "pure-pursuit.h"
 #include "robot-config.h"
 #include "user-control.h"
+#include "curvature.h"
 
 
 #define waitUntil(condition)                                                   \
