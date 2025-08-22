@@ -5,7 +5,6 @@
 #include <list>
 #include <cmath>
 #include <iostream>
-#include <vector>
 
 #include "v5.h"
 #include "v5_vcs.h"
@@ -20,7 +19,6 @@
 #include "pure-pursuit.h"
 #include "robot-config.h"
 #include "user-control.h"
-#include "curvature.h"
 
 
 #define waitUntil(condition)                                                   \

@@ -1,14 +1,12 @@
 #include "vex.h"
 
-using namespace std;
+//Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators
+//Horizontal distance from the side of the forward/backward tracking wheel to center
+const double horizontalTrackingCenter = 2.0;
+//Vertical distance from the side of the left/right tracking wheel to center
+const double verticalTrackingCenter = 2.25;
 
-//Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
-//Horizontal distance from the side of the forward/backward tracking wheel to center:
-const double horizontalTrackingCenter = -1.75;
-//Vertical distance from the side of the left/right tracking wheel to center:
-const double verticalTrackingCenter = -2.0;
-
-//Tracking wheel measurments in inches:
+//Tracking wheel measurments in inches
 double FRONT_WHEEL;
 double SIDE_WHEEL;
 double prevFRONT_WHEEL;
@@ -16,7 +14,7 @@ double prevSIDE_WHEEL;
 double deltaFRONT_WHEEL;
 double deltaSIDE_WHEEL;
 
-//Tracking coordinates:
+//Tracking coordinates
 double X;
 double Y;
 double deltaX;
@@ -24,11 +22,11 @@ double deltaY;
 double prevX;
 double prevY;
 
-//Variables for determining arc calculations or translation calculations:
+//Variables for determining arc calculations or translation calculations 
 double XCalculation;
 double YCalculation;
 
-//Arc circle stuff:
+//Arc circle stuff
 double radianHeading;
 double deltaRadianHeading;
 double averageRadianHeading;
@@ -38,12 +36,6 @@ double deltaArcLength;
 double arcRadius;
 double deltaRadius;
 double targetOrientation;
-
-//Robot hitbox variables:
-double r1;
-double r2;
-double r3;
-double r4;
 
 /*
 
@@ -57,13 +49,13 @@ so we can then add those to where it currently is and get the correct value."
 
 int positionTracking() {
     while (true) {
-        //Updating tracking wheel measurments in inches:
+        //Updating tracking wheel measurments in inches
         FRONT_WHEEL = frontTracking.position(turns) * (wheelRad * 2) * M_PI;
         SIDE_WHEEL = sideTracking.position(turns) * (wheelRad * 2) * M_PI;
         deltaFRONT_WHEEL = FRONT_WHEEL - prevFRONT_WHEEL;
         deltaSIDE_WHEEL = SIDE_WHEEL - prevSIDE_WHEEL;
 
-        //Arc math for determining the robots current side distance from the simulated circle center:
+        //Arc math for determining the robots current side distance from the simulated circle center
         radianHeading = Inertial1.heading(deg) * M_PI / 180;
         arcRadius = deltaFRONT_WHEEL / radianHeading;
         arcLength = arcRadius * radianHeading + horizontalTrackingCenter;
@@ -71,25 +63,25 @@ int positionTracking() {
         deltaRadianHeading = radianHeading - prevRadianHeading;
         averageRadianHeading = radianHeading - (deltaRadianHeading / 2);
 
-        //Math for determining current coordinates using the values above:
+        //Math for determining current coordinates using the values above
 
 
 
         //This is the math implemented from the video and sources from vex forum so I don't understand it as well. 
-        //It's also the core math for calculating the coordinates. The rest is update math and orientation math.
+        //It's also the core math for calculating the coordinates. The rest is update math and orientation math
 
         //If statement for determining whether the robot needs to use arc math in case of change in orientation or
-        //if it is just moving straightward in its current direction. I don't think this is necessarry for odom to work but it's really helpful.
-        //Here is the link to the formula: https://www.vexforum.com/t/2-tracking-wheel-imu-inertial-odometry/100037/2.
+        //if it is just moving straightward in its current direction. I don't think this is necessarry for odom to work but it's really heplful
+        //Here is the link to the formula: https://www.vexforum.com/t/2-tracking-wheel-imu-inertial-odometry/100037/2
         
         if (deltaRadianHeading == 0) {
             XCalculation = deltaSIDE_WHEEL;
             YCalculation = deltaFRONT_WHEEL;
         } 
         else {
-            //Depending on the tracking wheel placement, the tracking distances may need to be changed. It's basically just adding or subtracting from the tracking positions on the grid.
+            //Depending on the tracking wheel placement, the tracking distances may need to be changed. It's basically just adding or subtracting from the tracking positions on the grid
             XCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaSIDE_WHEEL / deltaRadianHeading) + horizontalTrackingCenter);
-            YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter);
+            YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter); 
         }
 
         deltaX = (YCalculation * sin(averageRadianHeading)) + (XCalculation * cos(averageRadianHeading));
@@ -97,55 +89,26 @@ int positionTracking() {
         //
 
 
-        //Updates distance from original position:
+        //Updates distance from original position
         X += deltaX;
         Y += deltaY;
 
 
-        //Previous values:
+        //Previous values
         prevX = X;
         prevY = Y;
-
         prevRadianHeading = radianHeading;
         prevFRONT_WHEEL = FRONT_WHEEL;
         prevSIDE_WHEEL = SIDE_WHEEL;
 
-        //std::cout << "X: " << X << "   Y: " << Y << std::endl;
-
-        Controller1.Screen.setCursor(1, 1);
-        Controller1.Screen.print("(");
-        Controller1.Screen.print(X);
-        Controller1.Screen.print(", ");
-        Controller1.Screen.print(Y);
-        Controller1.Screen.print(")");
-        Controller1.Screen.setCursor(2, 1);
-        Controller1.Screen.print("(");
-        Controller1.Screen.print(leftDriveX);
-        Controller1.Screen.print(", ");
-        Controller1.Screen.print(leftDriveY);
-        Controller1.Screen.print(")");
-        Controller1.Screen.setCursor(3, 1);
-        Controller1.Screen.print("(");
-        Controller1.Screen.print(rightDriveX);
-        Controller1.Screen.print(", ");
-        Controller1.Screen.print(rightDriveY);
-        Controller1.Screen.print(")");
-
-
-        double leftDriveCenterX = X + sqrt(drivetrainWidth / 2) * cos(Inertial1.heading(deg));
-        double leftDriveCenterY = Y + sqrt(drivetrainWidth / 2) * sin(Inertial1.heading(deg));
-
-        double rightDriveCenterX = X + sqrt(drivetrainWidth / 2) * cos(Inertial1.heading(deg));
-        double rightDriveCenterY = Y + sqrt(drivetrainWidth / 2) * sin(Inertial1.heading(deg));
-
-
+        std::cout << "X: " << X << "   Y: " << Y << std::endl;
         //wait (25, msec);
         task::sleep(10);
     }
     return 0;
 }
 
-//Function for calculating the distance from both axies. First two parameters are where it's at, second parameters are where it needs to be. Credit to Kassidy Mickelson.
+//Function for calculating the distance from both axes. First two parameters are where it's at, second parameters are where it needs to be. Credit to Kassidy Mickelson
 
 /*
 Square the difference between the x values.
@@ -160,7 +123,7 @@ double getDistance(double x1, double y1, double x2, double y2) {
     return sqrt(x_difference_squared + y_difference_squared);
 }
 
-//Sets the starting orientation of the robot:
+//Sets the starting orientation of the robot
 void setDrivePosition(double x, double y, double startHeading) {
     X = x;
     Y = y;
@@ -168,19 +131,19 @@ void setDrivePosition(double x, double y, double startHeading) {
     radianHeading = startHeading * M_PI / 180;
 }
 
-//Function for determining the coordinates the robot points at:
-//Here is the atan2 math: https://www.vexforum.com/t/turn-to-point/104602/2.
+//Function for determining the coordinates the robot points at
+//Here is the atan math: https://www.vexforum.com/t/turn-to-point/104602/2
 void turnToPosition(double x, double y, vex::directionType dir) {
-    //Uses atan2 to create the value that will multiply by radians formula to convert the heading to pointing toward certain coordinates:
+    //Uses atan to create the value that will multiply by radians formula to convert the heading to pointing toward certain coordinates
     if (dir == fwd) {
         turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI));
     } else if (dir == reverse) {
-        //This adds 180 to the desired orientation so that it is 180 degrees around the coordinates it should be pointing at:
+        //This adds 180 to the desired orientation so that it is 180 degrees around the coordinates it should be pointing at
         turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180);
     }
 }
 
-//Function for travelling the distance it needs to travel to reach the coordinates, then uses the PID controller to drive that exact distance:
+//Function for travelling the distance it needs to travel to reach the coordinates, then uses the PID controller to drive that exact distance
 void driveToPosition(double x, double y, vex::directionType dir) {
     turnToPosition(x, y, dir);
     if (dir == fwd) {

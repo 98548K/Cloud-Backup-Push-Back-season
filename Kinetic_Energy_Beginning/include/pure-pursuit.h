@@ -1,1 +1,1 @@
-void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY);
+void drawPath(double path);
