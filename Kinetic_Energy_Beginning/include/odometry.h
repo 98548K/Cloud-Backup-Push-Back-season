@@ -11,3 +11,12 @@ void turnToPosition(double x, double y, vex::directionType dir);
 void driveToPosition(double x, double y, vex::directionType dir);
 void slowDriveToPosition(double x, double y, vex::directionType dir);
 extern double getDistance(double x1, double y1, double x2, double y2);
+extern double leftDriveFrontX;
+extern double leftDriveFrontY;
+extern double rightDriveFrontX;
+extern double rightDriveFrontY;
+
+extern double leftDriveBackX;
+extern double leftDriveBackY;
+extern double rightDriveBackX;
+extern double rightDriveBackY;

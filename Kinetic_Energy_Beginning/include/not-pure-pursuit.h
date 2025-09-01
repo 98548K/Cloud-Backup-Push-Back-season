@@ -1,0 +1,1 @@
+void tracePath(std::vector<double> pltX, std::vector<double> pltY);
