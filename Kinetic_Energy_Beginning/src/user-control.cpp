@@ -24,8 +24,6 @@ void usercontrol(void) {
 
 
 
-
-
   while (1) {
     Drivetrain.setStopping(coast);
     LeftDriveSmart.setStopping(coast);

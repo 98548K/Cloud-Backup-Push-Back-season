@@ -3,10 +3,10 @@
 //This is not pure pursuit it is just a much simpler path tracking algorithm alternative.
 
 void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
-    int l = 1;
+    int l = 0;
     while (true) {
-        curveToPosition(pltX[l], pltY[l]);
-        if (X == pltX[l] && Y == pltY[l]) {
+        //Buttload of tolerance to allow for fluid movement.
+        if (getDistance(X, Y, pltX[l], pltY[l]) <= 10 && l < pltX.size()) {
             l += 1;
         }
         else if (l == pltX.size()) {
@@ -14,5 +14,31 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
             RightDriveSmart.stop(brake);
             break;
         }
+
+        
+        desiredHeading = validateHeading(atan2(pltX[l] - X, pltY[l] - Y) * (180 / M_PI));
+
+
+        if (validateHeading(((atan2(pltX[l] - X, pltY[l] - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(pltX[l] - X, pltY[l] - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
+            linearVel = -40;
+            //Standard P controller.
+            turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) - 180) * turnCurveP);
+        }
+        else {
+            linearVel = 40;
+            //Standard P controller.
+            turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
+        }
+
+
+        Ll = (linearVel + turnVel);
+        Lr = (linearVel - turnVel);
+
+
+        LeftDriveSmart.spin(fwd, Ll, pct);
+        RightDriveSmart.spin(fwd, Lr, pct);
+
+        wait (20, msec);
     }
+    
 }

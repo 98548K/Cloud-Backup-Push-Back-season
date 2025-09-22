@@ -120,13 +120,13 @@ int positionTracking() {
 
         //std::cout << "X: " << X << "   Y: " << Y << std::endl;
 
-        Controller1.Screen.setCursor(3, 1);
-        Controller1.Screen.print("(");
-        Controller1.Screen.print(X);
-        Controller1.Screen.print(", ");
-        Controller1.Screen.print(Y);
-        Controller1.Screen.print(")");
-        Controller1.Screen.print(Inertial1.heading(deg));
+        //Controller1.Screen.setCursor(3, 1);
+        //Controller1.Screen.print("(");
+        //Controller1.Screen.print(X);
+        //Controller1.Screen.print(", ");
+        //Controller1.Screen.print(Y);
+        //Controller1.Screen.print(")");
+        //Controller1.Screen.print(Inertial1.heading(deg));
 
 
         leftDriveFrontX = (X - drivetrainWidth / 2) * cos((-Inertial1.heading(deg) - 45) * (M_PI / 180));
@@ -181,18 +181,9 @@ void turnToPosition(double x, double y, vex::directionType dir) {
 void driveToPosition(double x, double y, vex::directionType dir) {
     turnToPosition(x, y, dir);
     if (dir == fwd) {
-        driveInOdom(getDistance(X, Y, x, y));
+        driveIn(getDistance(X, Y, x, y));
     }
     if (dir == reverse) {
-        driveInOdom(-getDistance(X, Y, x, y));
-    }
-}
-
-void slowDriveToPosition(double x, double y, vex::directionType dir) {
-    if (dir == fwd) {
-        slowDriveOdom(getDistance(X, Y, x, y));
-    }
-    if (dir == reverse) {
-        slowDriveOdom(-getDistance(X, Y, x, y));
+        driveIn(-getDistance(X, Y, x, y));
     }
 }

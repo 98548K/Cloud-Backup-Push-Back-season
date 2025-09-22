@@ -1,3 +1,12 @@
 void curveToPosition(double desiredX, double desiredY);
 extern double desiredHeading;
-void curveDesire(double Xdesire, double YDesire);
+
+extern double linearVel;
+extern double turnVel;
+
+extern const double turnCurveP;
+ 
+extern double Ll;
+extern double Lr;
+
+extern double validateHeading(double newHeading);

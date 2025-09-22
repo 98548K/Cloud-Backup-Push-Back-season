@@ -21,3 +21,6 @@ extern double turnKD;
 extern double kP;
 extern double kI;
 extern double kD;
+
+extern double storedTrackingMeasurements;
+extern double resetCurrentPosition;

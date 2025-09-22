@@ -1,24 +1,64 @@
 #include "vex.h"
+double desiredHeading;
+double linearVel;
+double turnVel;
 
+double desiredX;
+double desiredY;
+
+const double turnCurveP = 0.3;
+
+double desiredDist;
+
+double Ll;
+double Lr;
+
+
+double validateHeading(double newHeading) {
+    if (newHeading < 0) newHeading += 360;
+    if (newHeading > 360) newHeading -= 360;
+    return newHeading;
+}
 
 void curveToPosition(double desiredX, double desiredY) {
     while (true) {
-        double desiredHeading = constrainAngle(atan2(desiredX - X, desiredY - Y) * (180 / M_PI));
-        double linearVel = getDistance(X, Y, desiredX, desiredY) * .6;
-        //Standard P controller
-        double turnVel = (-constrainAngle(desiredHeading - Inertial1.heading(deg))) * .2;
-        double Ll = (linearVel - turnVel);
-        double Lr = (linearVel + turnVel);
+
+        desiredHeading = validateHeading(atan2(desiredX - X, desiredY - Y) * (180 / M_PI));
+
+
+        if (validateHeading(((atan2(desiredX - X, desiredY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(desiredX - X, desiredY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
+            linearVel = -40;
+            //Standard P controller.
+            turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) + 180) * turnCurveP);
+        }
+        else {
+            linearVel = 40;
+            //Standard P controller.
+            turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
+        }
+
+
+        Ll = (linearVel + turnVel);
+        Lr = (linearVel - turnVel);
+
+
         LeftDriveSmart.spin(fwd, Ll, pct);
         RightDriveSmart.spin(fwd, Lr, pct);
-        //getDistance(X, Y, desiredX, desiredY) < 2  
-        if (getDistance(X, Y, desiredX, desiredY) <= 0.5) {
+
+
+        //If both values are within their certain tolerance, the function will terminate:
+        if (getDistance(X, Y, desiredX, desiredY) <= 3) {
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
             break;
         }
-        
+    
 
         wait (20, msec);
     }
+    Controller1.Screen.clearLine();
+    Controller1.Screen.setCursor(1, 1);
+    Controller1.Screen.print(X);
+    Controller1.Screen.setCursor(2, 1);
+    Controller1.Screen.print(Y);
 }

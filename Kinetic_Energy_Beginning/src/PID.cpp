@@ -10,10 +10,6 @@ Kasens tuning tips (numerical order of tuning):
 */
 
 
-double clawKp = 0.0;//0.0
-double clawKi = 0.0;//0.0
-double clawKd = 0.0;//0.0
-
 double kP = 2.0;//0.0
 double kI = 0.0;//0.0
 double kD = 0.0;//0.0
@@ -28,8 +24,8 @@ double turnKD = 0.0;//0.0
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 0.3;//0.0
-double driveTolerance = 0.3;//0.0
+double turnTolerance = 1;//0.0
+double driveTolerance = 1;//0.0
 
 double driveIntegralLimit = 10.0;//20.0
 double turnIntegralLimit = 30.0;//30.0
@@ -66,18 +62,14 @@ class PID {
         //Declaring what instance of motor control it is:
         bool isTurning;
         bool isDriving;
-        bool isOdomDrive;
         bool isSlowDriving;
-        bool isSlowOdomDrive;
     //PID class parameter setup:
     public:
-        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool IsOdomDrive, bool IsSlowOdomDrive, bool IsSlowDriving) {
+        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool IsSlowDriving) {
             desiredValue = DesiredValue;
             error = DesiredValue;
             isTurning = IsTurning;
             isDriving = IsDriving;
-            isOdomDrive = IsOdomDrive;
-            isSlowOdomDrive = IsSlowOdomDrive;
             isSlowDriving = IsSlowDriving;
         }
 
@@ -105,7 +97,7 @@ class PID {
                 }
                 if (std::abs(error) < turnIntegralLimit && isTurning) {
                     integral = 0;
-                } else if (std::abs(error) < driveIntegralLimit && (isDriving || isOdomDrive)) {
+                } else if (std::abs(error) < driveIntegralLimit && (isDriving)) {
                     integral = 0;
                 }
 
@@ -150,36 +142,6 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-                //Class initialization for driving with odometry so it keeps track of the correct position of the tracking wheel only when it's only using odom:
-                else if (isOdomDrive) {
-                    error = desiredValue - frontTracking.position(turns) * (wheelRad * 2) * M_PI;
-                    pwr = error * kP + integral * kI + derivative * kD;
-                    if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
-                        RightDriveSmart.spin(fwd, pwr--, pct);
-                        LeftDriveSmart.spin(fwd, pwr++, pct);
-                    }
-                    else if (constrainAngle(storedHeading - Inertial1.heading(deg)) > 0) {
-                        RightDriveSmart.spin(fwd, pwr++, pct);
-                        LeftDriveSmart.spin(fwd, pwr--, pct);
-                    }
-                    if (error == 0) break;
-                    if (error >= -driveTolerance && error <= driveTolerance) break;
-                }
-
-                else if (isSlowOdomDrive) {
-                    error = desiredValue - frontTracking.position(turns) * (wheelRad * 2) * M_PI;
-                    pwr = error * slowKP + integral * slowKI + derivative * slowKD;
-                    if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
-                        RightDriveSmart.spin(fwd, pwr--, pct);
-                        LeftDriveSmart.spin(fwd, pwr++, pct);
-                    }
-                    else if (constrainAngle(storedHeading - Inertial1.heading(deg)) > 0) {
-                        RightDriveSmart.spin(fwd, pwr++, pct);
-                        LeftDriveSmart.spin(fwd, pwr--, pct);
-                    }
-                    if (error == 0) break;
-                    if (error >= -driveTolerance && error <= driveTolerance) break;
-                }
 
                 else if (isSlowDriving) {
                     //This section is just slow drive PID:
@@ -198,7 +160,7 @@ class PID {
                 }
 
                 //Terminates if within tolerance:
-                if ((error >= -driveTolerance && error <= driveTolerance && (isDriving || isOdomDrive)) || (error <= turnTolerance && error >= -turnTolerance && isTurning)) break;
+                if ((error >= -driveTolerance && error <= driveTolerance && isDriving) || (error <= turnTolerance && error >= -turnTolerance && isTurning)) break;
                 if (error == 0) break;
                 wait (15, msec);
             }
@@ -209,30 +171,18 @@ class PID {
 
 //Drive PID function:
 void driveIn(double driveDist) {
-    PID drivePID(driveDist, true, false, false, false, false);
+    PID drivePID(driveDist, true, false, false);
     drivePID.run();
 }
 
 //Turn PID function:
 void turnToHeading(double turnHeading) {
-    PID turnPID(turnHeading, false, true, false, false, false);
+    PID turnPID(turnHeading, false, true, false);
     turnPID.run();
-}
-
-//Drive PID function for odometry use so that it doesn't mess with encoder readings:
-void driveInOdom(double driveDist) {
-    PID odomDrivePID(driveDist, false, false, true, false, false);
-    odomDrivePID.run();
-}
-
-//Slow odometry PID:
-void slowDriveOdom(double driveDist) {
-    PID odomDrivePID(driveDist, false, false, false, true, false);
-    odomDrivePID.run();
 }
 
 //Slow drive PID:
 void slowDrive(double driveDist) {
-    PID drivePID(driveDist, false, false, false, false, true);
+    PID drivePID(driveDist, false, false, true);
     drivePID.run();
 }
