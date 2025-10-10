@@ -17,7 +17,8 @@ int i = pathX.size();
 
 
 //Lookahead distance constant declaration for finding the point of intersection on the path.
-const double lookaheadDistance = 50;
+const double lookaheadDistance = 6.5;
+const double lookaheadDistanceSquared = lookaheadDistance * lookaheadDistance;
 
 
 
@@ -50,16 +51,20 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
         Controller1.Screen.clearScreen();
         Controller1.Screen.setCursor(0,0);
         Controller1.Screen.print(getDistance(X, Y, pathPointX, pathPointY));
+        Controller1.Screen.setCursor(2,0);
+        Controller1.Screen.print(pathPointX);
+        Controller1.Screen.print(", ");
+        Controller1.Screen.print(pathPointY);
         //If the current iteration is beyond the circle intersection, it will continue iterating and prevent movement.
-        if (std::round((X - (pathX[i] * pathX[i])) + (Y - (pathY[i] * pathY[i]))) > lookaheadDistance) {
-            i = i - 1;
+        if (std::round(((X - pathX[i]) * (X - pathX[i])) + ((Y - pathY[i]) * (Y - pathY[i]))) > lookaheadDistanceSquared) {
+            i --;
             pathPointX = X;
             pathPointY = Y;
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
         }
         //If the iteration goes through the full cycle, it will repeat the iteration process.
-        else if (i == 0) {
+        else if (i == -1) {
             i = pathX.size();
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
@@ -71,19 +76,18 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
             break;
         }
         //If the furthest point of the iteration is within the circle, it will continue to increase until it reaches the border.
-        else if (std::round((X - (pathX[i + 1] * pathX[i + 1])) + (Y - (pathY[i + 1] * pathY[i + 1]))) <= lookaheadDistance) {
+        else if (std::round(((X - pathX[i + 1]) * (X - pathX[i + 1])) + ((Y - pathY[i + 1]) * (Y - pathY[i + 1]))) <= lookaheadDistanceSquared) {
             pathPointX = pathX[i + 1];
             pathPointY = pathY[i + 1];
-            i += 1;
+            i ++;
             curveTo();
         }
         //If the end of the intersection plus one is not within the circle, it will not continue down the path until intersection again.
-        else if (std::round((X - (pathX[i + 1] * pathX[i + 1])) + (Y - (pathY[i + 1] * pathY[i + 1]))) > lookaheadDistance) {
+        else if (std::round(((X - pathX[i + 1]) * (X - pathX[i + 1])) + ((Y - pathY[i + 1]) * (Y - pathY[i + 1]))) > lookaheadDistanceSquared) {
             pathPointX = pathX[i];
             pathPointY = pathY[i];
             curveTo();
         }
-
         wait (20, msec);
     }
 

@@ -10,17 +10,26 @@ brain  Brain;
 // VEXcode device constructors:
 controller Controller1 = controller(primary);
 
-
-motor LF = motor(PORT11, ratio6_1, true);
-motor LB = motor(PORT17, ratio6_1, true);
-motor_group LeftDriveSmart = motor_group(LF, LB);
-motor RF = motor(PORT20, ratio6_1, false);
-motor RB = motor(PORT1, ratio6_1, false);
-motor_group RightDriveSmart = motor_group(RF, RB);
-inertial Inertial1 = inertial(PORT9);
+motor LF = motor(PORT2, ratio6_1, true);
+motor LM = motor(PORT17, ratio6_1, true);
+motor LB = motor(PORT16, ratio6_1, true);
+motor_group LeftDriveSmart = motor_group(LF, LM, LB);
+motor RF = motor(PORT15, ratio6_1, false);
+motor RM = motor(PORT6, ratio6_1, false);
+motor RB = motor(PORT19, ratio6_1, false);
+motor_group RightDriveSmart = motor_group(RF, RM, RB);
+inertial Inertial1 = inertial(PORT8);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 299.24, 320, 40, mm, 0.75);
-rotation frontTracking = rotation(PORT10, true);
-rotation sideTracking = rotation(PORT14, true);
+rotation frontTracking = rotation(PORT11, false);
+rotation sideTracking = rotation(PORT20, false);
+motor ReversedIntake = motor(PORT21, ratio18_1,false);
+motor BottomIntake = motor(PORT9, ratio18_1,true);
+motor TopIntake = motor(PORT14, ratio18_1, true);
+digital_out IntakePiston = digital_out(Brain.ThreeWirePort.G);
+digital_out DescorePiston = digital_out(Brain.ThreeWirePort.F);
+digital_out BruteForce = digital_out(Brain.ThreeWirePort.H);
+digital_out Wing = digital_out(Brain.ThreeWirePort.E);
+optical BorderControl = optical(PORT18);
 
 
 bool RemoteControlCodeEnabled = true;
@@ -94,9 +103,9 @@ int rc_auto_loop_function_Controller1() {
  */
 void vexcodeInit( void ) {
   task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
+  frontTracking.setPosition(0, turns);
+  sideTracking.setPosition(0, turns);
   while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(newHeading, deg);
-    setDrivePosition(X, Y, newHeading);
     wait (25, msec);
   }
 }

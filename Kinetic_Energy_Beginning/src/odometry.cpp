@@ -4,9 +4,9 @@ using namespace std;
 
 //Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
 //Horizontal distance from the side of the forward/backward tracking wheel to center:
-const double horizontalTrackingCenter = -1.75;
+const double horizontalTrackingCenter = 0.0;
 //Vertical distance from the side of the left/right tracking wheel to center:
-const double verticalTrackingCenter = -2.0;
+const double verticalTrackingCenter = -1.0;
 
 //Tracking wheel measurments in inches:
 double FRONT_WHEEL;
@@ -33,9 +33,6 @@ double radianHeading;
 double deltaRadianHeading;
 double averageRadianHeading;
 double prevRadianHeading;
-double arcLength;
-double deltaArcLength;
-double arcRadius;
 double deltaRadius;
 double targetOrientation;
 
@@ -55,9 +52,7 @@ double rightDriveBackY;
 
 Fundamental odom math and updating math. Delta math formula is: delta value = value - previous value.
 This is so we can solve for the original value, then add the diference between
-where it was and where it's at using the formula. As Chris would put it, "So basically what you're saying
-is that subtracting the previous values from the current values gives us the difference in where it is and where it's been,
-so we can then add those to where it currently is and get the correct value."
+where it was and where it's at using the formula.
 
 */
 
@@ -69,23 +64,18 @@ int positionTracking() {
         deltaFRONT_WHEEL = FRONT_WHEEL - prevFRONT_WHEEL;
         deltaSIDE_WHEEL = SIDE_WHEEL - prevSIDE_WHEEL;
 
-        //Arc math for determining the robots current side distance from the simulated circle center:
+        //Converting inertial heading in degrees into radians to use in cmath library calculations
+        //because the standard angle units for trigonometric identities is radians:
         radianHeading = Inertial1.heading(deg) * M_PI / 180;
-        arcRadius = deltaFRONT_WHEEL / radianHeading;
-        arcLength = arcRadius * radianHeading + horizontalTrackingCenter;
-        deltaArcLength = arcRadius * radianHeading + horizontalTrackingCenter;
         deltaRadianHeading = radianHeading - prevRadianHeading;
         averageRadianHeading = radianHeading - (deltaRadianHeading / 2);
-
-        //Math for determining current coordinates using the values above:
-
 
 
         //This is the math implemented from the video and sources from vex forum so I don't understand it as well. 
         //It's also the core math for calculating the coordinates. The rest is update math and orientation math.
 
         //If statement for determining whether the robot needs to use arc math in case of change in orientation or
-        //if it is just moving straightward in its current direction. I don't think this is necessarry for odom to work but it's really helpful.
+        //if it is just moving straightward in its current direction.
         //Here is the link to the formula: https://www.vexforum.com/t/2-tracking-wheel-imu-inertial-odometry/100037/2.
         //This also qualifies as reverse arctangent or in other cases atan2.
 
@@ -118,16 +108,7 @@ int positionTracking() {
         prevFRONT_WHEEL = FRONT_WHEEL;
         prevSIDE_WHEEL = SIDE_WHEEL;
 
-        //std::cout << "X: " << X << "   Y: " << Y << std::endl;
-
-        //Controller1.Screen.setCursor(3, 1);
-        //Controller1.Screen.print("(");
-        //Controller1.Screen.print(X);
-        //Controller1.Screen.print(", ");
-        //Controller1.Screen.print(Y);
-        //Controller1.Screen.print(")");
-        //Controller1.Screen.print(Inertial1.heading(deg));
-
+        //Robot hitbox variables. Less important but are helpful for distance calculations:
 
         leftDriveFrontX = (X - drivetrainWidth / 2) * cos((-Inertial1.heading(deg) - 45) * (M_PI / 180));
         leftDriveFrontY = (Y - drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
@@ -140,6 +121,14 @@ int positionTracking() {
         rightDriveBackY = (Y + drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
 
 
+        /*Controller1.Screen.setCursor(0,0);
+        Controller1.Screen.print(X);
+        Controller1.Screen.setCursor(2,0);
+        Controller1.Screen.print(Y);
+        Controller1.Screen.setCursor(3,0);
+        Controller1.Screen.print(Inertial1.heading(deg));*/
+        
+
 
         //wait (25, msec);
         task::sleep(10);
@@ -147,7 +136,7 @@ int positionTracking() {
     return 0;
 }
 
-//Function for calculating the distance from both axies. First two parameters are where it's at, second parameters are where it needs to be. Credit to Kassidy Mickelson.
+//Function for calculating the distance from both axies. First two parameters are where it's at, third and fourth parameters are where it needs to be.
 
 //Pythagorean theorum solving for hypotenuse:
 

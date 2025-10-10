@@ -10,29 +10,24 @@ Kasens tuning tips (numerical order of tuning):
 */
 
 
-double kP = 2.0;//0.0
-double kI = 0.0;//0.0
-double kD = 0.0;//0.0
+double kP = 3.35;//3.35
+double kI = 0.01;//0.01
+double kD = 1.45;//1.45
 
-double slowKP = 0.0;//0.0
-double slowKI = 0.0;//0.0
-double slowKD = 0.0;//0.0
-
-double turnKP = 0.2;//0.0
-double turnKI = 0.0;//0.0
-double turnKD = 0.0;//0.0
+double turnKP = 0.4;//0.4
+double turnKI = 0.0005;//0.0005
+double turnKD = 0.1;//0.1
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 1;//0.0
-double driveTolerance = 1;//0.0
+double turnTolerance = 1.0;//1.0
+double driveTolerance = 0.1;//0.1
 
 double driveIntegralLimit = 10.0;//20.0
 double turnIntegralLimit = 30.0;//30.0
 
 const double drivetrainWidth = 13.0;//↔
 const double drivetrainLength = 13.5;//↕
-
 
 
 //Function for determining the turn direction. Credit to Caleb Carlson for making this function easy to find (https://www.vexforum.com/t/turning-with-pid-how-to-find-the-shortest-turn/110258/6):
@@ -62,15 +57,13 @@ class PID {
         //Declaring what instance of motor control it is:
         bool isTurning;
         bool isDriving;
-        bool isSlowDriving;
     //PID class parameter setup:
     public:
-        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool IsSlowDriving) {
+        PID(double DesiredValue, bool IsDriving, bool IsTurning) {
             desiredValue = DesiredValue;
             error = DesiredValue;
             isTurning = IsTurning;
             isDriving = IsDriving;
-            isSlowDriving = IsSlowDriving;
         }
 
         void run() {
@@ -142,23 +135,6 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-
-                else if (isSlowDriving) {
-                    //This section is just slow drive PID:
-                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
-                    pwr = error * slowKP + integral * slowKI + derivative * slowKD;
-                    if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
-                        RightDriveSmart.spin(fwd, pwr--, pct);
-                        LeftDriveSmart.spin(fwd, pwr++, pct);
-                    }
-                    else if (constrainAngle(storedHeading - Inertial1.heading(deg)) > 0) {
-                        RightDriveSmart.spin(fwd, pwr++, pct);
-                        LeftDriveSmart.spin(fwd, pwr--, pct);
-                    }
-                    if (error == 0) break;
-                    if (error >= -driveTolerance && error <= driveTolerance) break;
-                }
-
                 //Terminates if within tolerance:
                 if ((error >= -driveTolerance && error <= driveTolerance && isDriving) || (error <= turnTolerance && error >= -turnTolerance && isTurning)) break;
                 if (error == 0) break;
@@ -171,18 +147,12 @@ class PID {
 
 //Drive PID function:
 void driveIn(double driveDist) {
-    PID drivePID(driveDist, true, false, false);
+    PID drivePID(driveDist, true, false);
     drivePID.run();
 }
 
 //Turn PID function:
 void turnToHeading(double turnHeading) {
-    PID turnPID(turnHeading, false, true, false);
+    PID turnPID(turnHeading, false, true);
     turnPID.run();
-}
-
-//Slow drive PID:
-void slowDrive(double driveDist) {
-    PID drivePID(driveDist, false, false, true);
-    drivePID.run();
 }

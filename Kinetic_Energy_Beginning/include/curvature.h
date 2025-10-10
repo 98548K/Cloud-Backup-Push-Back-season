@@ -4,7 +4,7 @@ extern double desiredHeading;
 extern double linearVel;
 extern double turnVel;
 
-extern const double turnCurveP;
+extern double turnCurveP;
  
 extern double Ll;
 extern double Lr;

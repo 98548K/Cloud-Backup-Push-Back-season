@@ -24,7 +24,6 @@ competition Competition;
 
 
 int main() {
-  
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
   task odomTask = task(positionTracking);

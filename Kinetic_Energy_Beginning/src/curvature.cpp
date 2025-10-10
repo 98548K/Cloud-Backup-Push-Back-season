@@ -6,7 +6,7 @@ double turnVel;
 double desiredX;
 double desiredY;
 
-const double turnCurveP = 0.3;
+double turnCurveP;
 
 double desiredDist;
 

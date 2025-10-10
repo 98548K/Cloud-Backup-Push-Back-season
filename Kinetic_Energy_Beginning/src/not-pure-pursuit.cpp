@@ -6,7 +6,8 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
     int l = 0;
     while (true) {
         //Buttload of tolerance to allow for fluid movement.
-        if (getDistance(X, Y, pltX[l], pltY[l]) <= 10 && l < pltX.size()) {
+        double hugeTolerance = 15;
+        if (getDistance(X, Y, pltX[l], pltY[l]) <= hugeTolerance && l < pltX.size()) {
             l += 1;
         }
         else if (l == pltX.size()) {
