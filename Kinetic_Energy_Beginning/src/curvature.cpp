@@ -14,10 +14,10 @@ double Ll;
 double Lr;
 
 
-double validateHeading(double newHeading) {
-    if (newHeading < 0) newHeading += 360;
-    if (newHeading > 360) newHeading -= 360;
-    return newHeading;
+double validateHeading(double bestHeading) {
+    if (bestHeading < 0) bestHeading += 360;
+    if (bestHeading > 360) bestHeading -= 360;
+    return bestHeading;
 }
 
 void curveToPosition(double desiredX, double desiredY) {

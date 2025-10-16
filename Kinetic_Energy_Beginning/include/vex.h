@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "v5.h"
 #include "v5_vcs.h"

@@ -106,6 +106,7 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   while (Inertial1.isCalibrating()) {
+    Inertial1.setHeading(beginHeading, deg);
     wait (25, msec);
   }
 }

@@ -1,3 +1,3 @@
-extern double newHeading;
+extern double beginHeading;
 
 void Right_Blue();

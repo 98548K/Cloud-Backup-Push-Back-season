@@ -20,7 +20,7 @@ double turnKD = 0.1;//0.1
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 1.0;//1.0
+double turnTolerance = 0.5;//1.0
 double driveTolerance = 0.1;//0.1
 
 double driveIntegralLimit = 10.0;//20.0
