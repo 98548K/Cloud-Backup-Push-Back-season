@@ -103,8 +103,12 @@ int rc_auto_loop_function_Controller1() {
  */
 void vexcodeInit( void ) {
   task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
+  //Starting setup code here:
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
+  beginHeading = 270;
+  X = 63.8;
+  Y = -17;
   while (Inertial1.isCalibrating()) {
     Inertial1.setHeading(beginHeading, deg);
     wait (25, msec);

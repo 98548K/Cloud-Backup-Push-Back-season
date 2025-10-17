@@ -22,5 +22,6 @@ extern digital_out Wing;
 
 extern optical BorderControl;
 
+extern bool RemoteControlCodeEnabled;
 
 void  vexcodeInit( void );

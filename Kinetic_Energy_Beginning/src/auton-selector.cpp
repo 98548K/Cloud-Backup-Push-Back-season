@@ -1,4 +1,5 @@
 #include "vex.h"
+
 int quadrant = 0;
 bool isCalibrated = false;
 bool ranOnce = false;
@@ -211,6 +212,32 @@ const char* setAuton(const char* row1, const char* row2, const char* row3, const
   return row;
 }
 
+
+/*
+//Each list is ordered as follows: auton, inertial heading, X, Y
+void setStart(std::vector<std::variant<double, const char*>> row1, std::vector<std::variant<double, const char*>> row2, std::vector<std::variant<double, const char*>> row3, std::vector<std::variant<double, const char*>> row4) {
+  if (auton == row1[1]) {
+    beginHeading = row1[2];
+    X = row1[3];
+    Y = row1[4];
+  }
+  else if (auton == row2[1]) {
+    beginHeading = row2[2];
+    X = row2[3];
+    Y = row2[4];
+  }
+  else if (auton == row3[1]) {
+    beginHeading = row3[2];
+    X = row3[3];
+    Y = row3[4];
+  }
+  else if (auton == row4[1]) {
+    beginHeading = row4[2];
+    X = row4[3];
+    Y = row4[4];
+  }
+}
+*/
 
 void touch() {
   while(true) {

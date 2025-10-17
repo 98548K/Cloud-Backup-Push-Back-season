@@ -60,6 +60,7 @@ void autonomous(void) {
         
     }
     else {
-        Right_Blue();
+        //Bad_Skills();
+        Left_Blue();
     }
 }
