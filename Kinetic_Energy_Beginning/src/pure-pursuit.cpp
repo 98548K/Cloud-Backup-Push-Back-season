@@ -2,6 +2,18 @@
 
 //Desmos graph here: https://www.desmos.com/calculator/4c9taq6heq.
 
+double returnElement;
+/*
+void setTupleXY(double pos, const char* Axis) {
+    if (Axis == "X" || Axis == "x") {
+        returnElement = std::get<0>(element_tuple);
+    }
+    else if (Axis == "Y" || Axis == "y") {
+        returnElement = std::get<0>(element_tuple);
+    }
+    return returnElement;
+}*/
+
 //Variable declaration:
 std::vector<double> pathX;
 std::vector<double> pathY;
@@ -22,33 +34,8 @@ const double lookaheadDistanceSquared = lookaheadDistance * lookaheadDistance;
 
 
 
-void curveTo() {
-    desiredHeading = validateHeading(atan2(pathPointX - X, pathPointY - Y) * (180 / M_PI));
-
-
-    if (validateHeading(((atan2(pathPointY - X, pathPointY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(pathPointX - X, pathPointY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
-        linearVel = -40;
-        //Standard P controller.
-        turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) - 180) * turnCurveP);
-    }
-    else {
-        linearVel = 40;
-        //Standard P controller.
-        turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
-    }
-
-
-    Ll = (linearVel + turnVel);
-    Lr = (linearVel - turnVel);
-
-
-    LeftDriveSmart.spin(fwd, Ll, pct);
-    RightDriveSmart.spin(fwd, Lr, pct);
-}
-
-void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
+void purePursuitPath(std::vector<std::tuple<double, double>> path) {
     while (true) {
-        Controller1.Screen.clearScreen();
         Controller1.Screen.setCursor(0,0);
         Controller1.Screen.print(getDistance(X, Y, pathPointX, pathPointY));
         Controller1.Screen.setCursor(2,0);
@@ -80,13 +67,13 @@ void purePursuitPath(std::vector<double> pathX, std::vector<double> pathY) {
             pathPointX = pathX[i + 1];
             pathPointY = pathY[i + 1];
             i ++;
-            curveTo();
+            //curveTo();
         }
         //If the end of the intersection plus one is not within the circle, it will not continue down the path until intersection again.
         else if (std::round(((X - pathX[i + 1]) * (X - pathX[i + 1])) + ((Y - pathY[i + 1]) * (Y - pathY[i + 1]))) > lookaheadDistanceSquared) {
             pathPointX = pathX[i];
             pathPointY = pathY[i];
-            curveTo();
+            //curveTo();
         }
         wait (20, msec);
     }

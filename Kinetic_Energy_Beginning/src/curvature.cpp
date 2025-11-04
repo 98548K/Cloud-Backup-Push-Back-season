@@ -56,7 +56,6 @@ void curveToPosition(double desiredX, double desiredY) {
 
         wait (20, msec);
     }
-    Controller1.Screen.clearLine();
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.print(X);
     Controller1.Screen.setCursor(2, 1);

@@ -4,10 +4,10 @@
 
 int sortColorRed() {
   while (true) {
-    if (BorderControl.hue() >= 300 && BorderControl.hue() <= 400) {
-      BruteForce.set(true);
-      wait (20, msec);
+    if (BorderControl.hue() >= 10 && BorderControl.hue() <= 350 && BorderControl.objectDetectThreshold(127)) {
       BruteForce.set(false);
+      wait (10, msec);
+      BruteForce.set(true);
     }
   }
   return 0;
@@ -16,9 +16,9 @@ int sortColorRed() {
 int sortColorBlue() {
   while (true) {
     if (BorderControl.hue() >= 145 && BorderControl.hue() <= 215) {
-      BruteForce.set(true);
-      wait (20, msec);
       BruteForce.set(false);
+      wait (10, msec);
+      BruteForce.set(true);
     }
   }
   return 0;

@@ -6,8 +6,9 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-//#include <variant>
 #include <string>
+#include <tuple>
+#include <numeric>
 
 #include "v5.h"
 #include "v5_vcs.h"
@@ -24,6 +25,7 @@
 #include "user-control.h"
 #include "curvature.h"
 #include "not-pure-pursuit.h"
+#include "main.h"
 
 
 #define waitUntil(condition)                                                   \

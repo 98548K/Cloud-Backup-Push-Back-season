@@ -121,12 +121,12 @@ int positionTracking() {
         rightDriveBackY = (Y + drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
 
 
-        Controller1.Screen.setCursor(0,0);
+        /*Controller1.Screen.setCursor(0,0);
         Controller1.Screen.print(X);
         Controller1.Screen.setCursor(2,0);
         Controller1.Screen.print(Y);
         Controller1.Screen.setCursor(3,0);
-        Controller1.Screen.print(Inertial1.heading(deg));
+        Controller1.Screen.print(Inertial1.heading(deg));*/
         
 
 

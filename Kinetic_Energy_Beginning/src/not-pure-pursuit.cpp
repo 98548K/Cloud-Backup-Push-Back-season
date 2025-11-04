@@ -10,7 +10,7 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
         if (getDistance(X, Y, pltX[l], pltY[l]) <= hugeTolerance && l < pltX.size()) {
             l += 1;
         }
-        else if (l == pltX.size()) {
+        else if (getDistance(X, Y, pltX[l], pltY[l]) <= 3 && l == pltX.size()) {
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
             break;

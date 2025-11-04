@@ -20,9 +20,10 @@ void usercontrol(void) {
     Drivetrain.setDriveVelocity(100, pct);
     LeftDriveSmart.setStopping(coast);
     RightDriveSmart.setStopping(coast);
-    TopIntake.setVelocity(100, pct);
-    BottomIntake.setVelocity(100, pct);
-    ReversedIntake.setVelocity(100, pct);
+    FrontIntake.setVelocity(100, pct);
+    MiddleIntake.setVelocity(100, pct);
+    BackIntake.setVelocity(100, pct);
+    BorderControl.setLightPower(100, pct);
 
 
 
@@ -31,27 +32,49 @@ void usercontrol(void) {
     LeftDriveSmart.setStopping(coast);
     RightDriveSmart.setStopping(coast);
 
-
-    if (Controller1.ButtonR1.pressing()){
-      BottomIntake.spin(fwd);
-      ReversedIntake.spin(fwd);
-    } else if (Controller1.ButtonR2.pressing()){
-      BottomIntake.spin(reverse);
-      ReversedIntake.spin(reverse);
-    } else {
-      BottomIntake.stop();
-      ReversedIntake.stop();
+    if (Controller1.ButtonR1.pressing() && Controller1.ButtonL1.pressing()) {
+      BackIntake.spin(reverse, 100, pct);
+      MiddleIntake.spin(fwd, 100, pct);
+      FrontIntake.spin(fwd, 100, pct);
     }
-    
-    if (Controller1.ButtonL1.pressing()){
-      TopIntake.spin(fwd);
-    } else if (Controller1.ButtonL2.pressing()){
-      TopIntake.spin(reverse);
-    } else {
-      TopIntake.stop();
+    else if (Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
+      BackIntake.spin(fwd, 100, pct);
+      MiddleIntake.spin(fwd, 100, pct);
+      FrontIntake.spin(fwd, 100, pct);
+    }
+    //Intake fill
+    else if (Controller1.ButtonR1.pressing()){
+      BackIntake.stop();
+      MiddleIntake.spin(fwd, 100, pct);
+      FrontIntake.spin(fwd, 100, pct);
+    }
+    //Outtake
+    else if (Controller1.ButtonR2.pressing()){
+      BackIntake.stop();
+      MiddleIntake.spin(reverse, 100, pct);
+      FrontIntake.spin(reverse, 100, pct);
+    }
+    //Intake long
+    else if (Controller1.ButtonL1.pressing()){
+      BackIntake.spin(reverse, 100, pct);
+      MiddleIntake.stop();
+      FrontIntake.stop();
+    }
+    //Intake medium
+    else if (Controller1.ButtonL2.pressing()){
+      BackIntake.spin(fwd, 100, pct);
+      MiddleIntake.stop();
+      FrontIntake.stop();
+    }
+    //Stop intakes
+    else {
+      BackIntake.stop();
+      MiddleIntake.stop();
+      FrontIntake.stop();
     }
 
-    if (Controller1.ButtonY.pressing()) {
+
+    if (Controller1.ButtonDown.pressing()) {
       if (toggleIntakePiston == true) {
         toggleIntakePiston = false;
         wait (200, msec);

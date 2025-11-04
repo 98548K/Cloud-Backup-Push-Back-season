@@ -54,16 +54,20 @@ class PID {
         double storedHeading;
         double resetCurrentPosition;
         double turnDifference;
+        double timing;
         //Declaring what instance of motor control it is:
+        bool timerEnabled;
         bool isTurning;
         bool isDriving;
     //PID class parameter setup:
     public:
-        PID(double DesiredValue, bool IsDriving, bool IsTurning) {
+        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool TimerEnabled, double Timing) {
             desiredValue = DesiredValue;
             error = DesiredValue;
             isTurning = IsTurning;
             isDriving = IsDriving;
+            timerEnabled = TimerEnabled;
+            timing = Timing;
         }
 
         void run() {
@@ -135,9 +139,34 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-                //Terminates if within tolerance:
-                if ((error >= -driveTolerance && error <= driveTolerance && isDriving) || (error <= turnTolerance && error >= -turnTolerance && isTurning)) break;
-                if (error == 0) break;
+
+                //Class initialization for turning with timer:
+                if (isTurning && timerEnabled) {
+                    error = constrainAngle(desiredValue - Inertial1.heading(deg));
+                    pwr = error * turnKP + integral * turnKI + derivative * turnKD;
+                    LeftDriveSmart.spin(fwd, pwr, pct);
+                    RightDriveSmart.spin(reverse, pwr, pct);
+                    if (Brain.timer(sec) == timing) break;
+                }
+
+
+                //Class initialization for driving with timer:
+                else if (isDriving && timerEnabled) {
+                    //This section is just drive PID:
+                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
+                    pwr = error * kP + integral * kI + derivative * kD;
+                    if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
+                        RightDriveSmart.spin(fwd, pwr--, pct);
+                        LeftDriveSmart.spin(fwd, pwr++, pct);
+                    }
+                    else if (constrainAngle(storedHeading - Inertial1.heading(deg)) > 0) {
+                        RightDriveSmart.spin(fwd, pwr++, pct);
+                        LeftDriveSmart.spin(fwd, pwr--, pct);
+                    }
+                    if (Brain.timer(sec) == timing) break;
+                }
+
+
                 wait (15, msec);
             }
             LeftDriveSmart.stop(hold);
@@ -147,12 +176,32 @@ class PID {
 
 //Drive PID function:
 void driveIn(double driveDist) {
-    PID drivePID(driveDist, true, false);
+    PID drivePID(driveDist, true, false, false, 0);
     drivePID.run();
 }
 
 //Turn PID function:
 void turnToHeading(double turnHeading) {
-    PID turnPID(turnHeading, false, true);
+    PID turnPID(turnHeading, false, true, false, 0);
     turnPID.run();
+}
+
+double startTimer;
+
+//Drive PID with timer function:
+void driveIn(double driveDist, double drivePeriod) {
+    startTimer = Brain.timer(sec);
+    Brain.resetTimer();
+    PID drivePID(driveDist, true, false, true, drivePeriod);
+    drivePID.run();
+    Brain.setTimer(Brain.timer(sec) + startTimer, sec);
+}
+
+//Turn PID with timer function:
+void turnToHeading(double turnHeading, double turnPeriod) {
+    startTimer = Brain.timer(sec);
+    Brain.resetTimer();
+    PID turnPID(turnHeading, false, true, true, turnPeriod);
+    turnPID.run();
+    Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }

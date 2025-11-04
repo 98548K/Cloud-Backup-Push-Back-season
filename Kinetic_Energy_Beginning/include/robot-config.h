@@ -11,9 +11,10 @@ extern inertial Inertial1;
 extern motor_group LeftDriveSmart;
 extern motor_group RightDriveSmart;
 
-extern motor ReversedIntake;
-extern motor BottomIntake;
-extern motor TopIntake;
+extern motor BackIntake;
+extern motor FrontIntake;
+extern motor MiddleIntake;
+
 
 extern digital_out IntakePiston;
 extern digital_out DescorePiston;

@@ -10,26 +10,27 @@ brain  Brain;
 // VEXcode device constructors:
 controller Controller1 = controller(primary);
 
-motor LF = motor(PORT2, ratio6_1, true);
-motor LM = motor(PORT17, ratio6_1, true);
-motor LB = motor(PORT16, ratio6_1, true);
+motor LF = motor(PORT15, ratio6_1, true);
+motor LM = motor(PORT16, ratio6_1, true);
+motor LB = motor(PORT17, ratio6_1, true);
 motor_group LeftDriveSmart = motor_group(LF, LM, LB);
-motor RF = motor(PORT15, ratio6_1, false);
-motor RM = motor(PORT6, ratio6_1, false);
-motor RB = motor(PORT19, ratio6_1, false);
+motor RF = motor(PORT18, ratio6_1, false);
+motor RM = motor(PORT19, ratio6_1, false);
+motor RB = motor(PORT20, ratio6_1, false);
 motor_group RightDriveSmart = motor_group(RF, RM, RB);
-inertial Inertial1 = inertial(PORT8);
+inertial Inertial1 = inertial(PORT12);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 299.24, 320, 40, mm, 0.75);
-rotation frontTracking = rotation(PORT11, false);
-rotation sideTracking = rotation(PORT20, false);
-motor ReversedIntake = motor(PORT21, ratio18_1,false);
-motor BottomIntake = motor(PORT9, ratio18_1,true);
-motor TopIntake = motor(PORT14, ratio18_1, true);
-digital_out IntakePiston = digital_out(Brain.ThreeWirePort.G);
+rotation frontTracking = rotation(PORT13, false);
+rotation sideTracking = rotation(PORT14, false);
+motor BackIntake = motor(PORT10, ratio18_1, true);
+motor FrontIntake = motor(PORT21, ratio18_1, false);
+motor MiddleIntake = motor(PORT9, ratio18_1, true);
+digital_out IntakePiston = digital_out(Brain.ThreeWirePort.H);
 digital_out DescorePiston = digital_out(Brain.ThreeWirePort.F);
-digital_out BruteForce = digital_out(Brain.ThreeWirePort.H);
+digital_out BruteForce = digital_out(Brain.ThreeWirePort.G);
 digital_out Wing = digital_out(Brain.ThreeWirePort.E);
-optical BorderControl = optical(PORT18);
+optical BorderControl = optical(PORT2);
+
 
 
 bool RemoteControlCodeEnabled = true;
@@ -106,11 +107,4 @@ void vexcodeInit( void ) {
   //Starting setup code here:
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
-  beginHeading = 270;
-  X = 63.8;
-  Y = -17;
-  while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(beginHeading, deg);
-    wait (25, msec);
-  }
 }

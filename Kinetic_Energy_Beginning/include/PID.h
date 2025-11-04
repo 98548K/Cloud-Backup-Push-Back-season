@@ -6,11 +6,9 @@ void driveIn(double driveDist);
 
 void turnToHeading(double turnHeading);
 
-void driveInOdom(double driveDist);
+void driveIn(double driveDist, double drivePeriod);
 
-void slowDriveOdom(double driveDist);
-
-void slowDrive(double driveDist);
+void turnToHeading(double turnHeading, double turnPeriod);
 
 extern double constrainAngle(double x);
 
