@@ -38,9 +38,6 @@ int main() {
 
   
   while (true) {
-    if (Competition.isDriverControl()) {
-      Drivetrain.setDriveVelocity(0, pct);
-    }
     wait(100, msec);
   }
 }

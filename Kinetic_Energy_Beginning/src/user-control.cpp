@@ -12,8 +12,39 @@ using code = vision::code;
 bool toggleIntakePiston;
 bool deScore;
 bool wingIt;
+bool Xpressed;
 
+int half = 1;
 
+void intakeFill() {
+  BackIntake.stop();
+  MiddleIntake.spin(fwd, 100, pct);
+  FrontIntake.spin(fwd, 100, pct);
+}
+
+void outtake() {
+  BackIntake.stop();
+  MiddleIntake.spin(reverse, 100, pct);
+  FrontIntake.spin(reverse, 100, pct);
+}
+
+void intakeLong() {
+  BackIntake.spin(reverse, 50, pct);
+  MiddleIntake.stop();
+  FrontIntake.stop();
+}
+
+void intakeMedium() {
+  BackIntake.spin(fwd, 100, pct);
+  MiddleIntake.stop();
+  FrontIntake.stop();
+}
+
+void stopIntakes() {
+  BackIntake.stop();
+  MiddleIntake.stop();
+  FrontIntake.stop();
+}
 
 void usercontrol(void) {
     Drivetrain.setStopping(coast);
@@ -23,7 +54,6 @@ void usercontrol(void) {
     FrontIntake.setVelocity(100, pct);
     MiddleIntake.setVelocity(100, pct);
     BackIntake.setVelocity(100, pct);
-    BorderControl.setLightPower(100, pct);
 
 
 
@@ -44,33 +74,23 @@ void usercontrol(void) {
     }
     //Intake fill
     else if (Controller1.ButtonR1.pressing()){
-      BackIntake.stop();
-      MiddleIntake.spin(fwd, 100, pct);
-      FrontIntake.spin(fwd, 100, pct);
+      intakeFill();
     }
     //Outtake
     else if (Controller1.ButtonR2.pressing()){
-      BackIntake.stop();
-      MiddleIntake.spin(reverse, 100, pct);
-      FrontIntake.spin(reverse, 100, pct);
-    }
-    //Intake long
-    else if (Controller1.ButtonL1.pressing()){
-      BackIntake.spin(reverse, 100, pct);
-      MiddleIntake.stop();
-      FrontIntake.stop();
+      outtake();
     }
     //Intake medium
+    else if (Controller1.ButtonL1.pressing()){
+      intakeMedium();
+    }
+    //Intake long
     else if (Controller1.ButtonL2.pressing()){
-      BackIntake.spin(fwd, 100, pct);
-      MiddleIntake.stop();
-      FrontIntake.stop();
+      intakeLong();
     }
     //Stop intakes
     else {
-      BackIntake.stop();
-      MiddleIntake.stop();
-      FrontIntake.stop();
+      stopIntakes();
     }
 
 
@@ -99,7 +119,7 @@ void usercontrol(void) {
       DescorePiston.set(deScore);
     }
 
-    if (Controller1.ButtonB.pressing()) {
+    if (Controller1.ButtonY.pressing()) {
       if (wingIt == true) {
         wingIt = false;
         wait (200, msec);
@@ -112,7 +132,7 @@ void usercontrol(void) {
     }
     
     //Color sort toggle code:
-    if (Controller1.ButtonA.pressing()) {
+    if (Controller1.ButtonB.pressing()) {
         if (colorSortColor == "Off ") {
             colorSortColor = "Red ";
             colorSortingBlue.suspend();
@@ -135,10 +155,24 @@ void usercontrol(void) {
             colorSortColor = "Off ";
         }
 
+    
+
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(colorSortColor);
-    wait(20, msec); 
-                    
   }
+
+  if (Controller1.ButtonX.pressing()) {
+      if (Xpressed == true) {
+        Xpressed = false;
+        half = 1;
+        wait (200, msec);
+      }
+      else if (Xpressed == false) {
+        Xpressed = true;
+        half = 4.5;
+        wait (200, msec);
+      }
+    }
+
 }
 }

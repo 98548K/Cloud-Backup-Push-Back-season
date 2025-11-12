@@ -10,21 +10,23 @@ Kasens tuning tips (numerical order of tuning):
 */
 
 
-double kP = 3.35;//3.35
-double kI = 0.01;//0.01
-double kD = 1.45;//1.45
 
-double turnKP = 0.4;//0.4
-double turnKI = 0.0005;//0.0005
-double turnKD = 0.1;//0.1
+double kP = 2.2;//0.0
+double kI = 0.014;//0.0
+double kD = 0.2;//0.0
+
+double turnKP = 0.45;//0.0
+double turnKI = 0.000001;//0.0
+double turnKD = 0.4;//0.0
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 0.5;//1.0
-double driveTolerance = 0.1;//0.1
+double turnTolerance = 1.0;//0.0
+double driveTolerance = 0.1;//0.0
 
-double driveIntegralLimit = 10.0;//20.0
-double turnIntegralLimit = 30.0;//30.0
+//Will continue using the integral until it's the limit away from its destination
+double driveIntegralLimit = 0.0;//20.0
+double turnIntegralLimit = 2.0;//30.0
 
 const double drivetrainWidth = 13.0;//↔
 const double drivetrainLength = 13.5;//↕
@@ -103,13 +105,10 @@ class PID {
                 prevError = error;
                 //
 
-                //Turn difference calculations for determing the distance between the left and right sides of the drivetrain:
-                turnDifference = 2 * ((drivetrainWidth / 2) * radianHeading) * (sin(radianHeading / 2));
 
-                
 
                 //Class initialization for turning:
-                if (isTurning) {
+                if (isTurning && !timerEnabled) {
                     error = constrainAngle(desiredValue - Inertial1.heading(deg));
                     pwr = error * turnKP + integral * turnKI + derivative * turnKD;
                     LeftDriveSmart.spin(fwd, pwr, pct);
@@ -123,7 +122,7 @@ class PID {
                 //RightDriveSmart.spin(fwd, pwr, pct);
 
                 //Class initialization for driving:
-                else if (isDriving) {
+                else if (isDriving && !timerEnabled) {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
                     pwr = error * kP + integral * kI + derivative * kD;
@@ -146,7 +145,7 @@ class PID {
                     pwr = error * turnKP + integral * turnKI + derivative * turnKD;
                     LeftDriveSmart.spin(fwd, pwr, pct);
                     RightDriveSmart.spin(reverse, pwr, pct);
-                    if (Brain.timer(sec) == timing) break;
+                    if (std::round(Brain.timer(sec)) == timing) break;
                 }
 
 
@@ -163,7 +162,7 @@ class PID {
                         RightDriveSmart.spin(fwd, pwr++, pct);
                         LeftDriveSmart.spin(fwd, pwr--, pct);
                     }
-                    if (Brain.timer(sec) == timing) break;
+                    if (std::round(Brain.timer(sec)) == timing) break;
                 }
 
 
@@ -192,8 +191,8 @@ double startTimer;
 void driveIn(double driveDist, double drivePeriod) {
     startTimer = Brain.timer(sec);
     Brain.resetTimer();
-    PID drivePID(driveDist, true, false, true, drivePeriod);
-    drivePID.run();
+    PID timedDrivePID(driveDist, true, false, true, drivePeriod);
+    timedDrivePID.run();
     Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }
 
@@ -201,7 +200,7 @@ void driveIn(double driveDist, double drivePeriod) {
 void turnToHeading(double turnHeading, double turnPeriod) {
     startTimer = Brain.timer(sec);
     Brain.resetTimer();
-    PID turnPID(turnHeading, false, true, true, turnPeriod);
-    turnPID.run();
+    PID timedTurnPID(turnHeading, false, true, true, turnPeriod);
+    timedTurnPID.run();
     Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }

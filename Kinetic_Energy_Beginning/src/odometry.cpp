@@ -4,9 +4,9 @@ using namespace std;
 
 //Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
 //Horizontal distance from the side of the forward/backward tracking wheel to center:
-const double horizontalTrackingCenter = 0.0;
+const double horizontalTrackingCenter = -3.5;
 //Vertical distance from the side of the left/right tracking wheel to center:
-const double verticalTrackingCenter = -1.0;
+const double verticalTrackingCenter = 2.5;
 
 //Tracking wheel measurments in inches:
 double FRONT_WHEEL;
@@ -120,13 +120,14 @@ int positionTracking() {
         rightDriveBackX = (X + drivetrainWidth / 2) * cos((-Inertial1.heading(deg) - 45) * (M_PI / 180));
         rightDriveBackY = (Y + drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
 
-
-        /*Controller1.Screen.setCursor(0,0);
-        Controller1.Screen.print(X);
-        Controller1.Screen.setCursor(2,0);
-        Controller1.Screen.print(Y);
-        Controller1.Screen.setCursor(3,0);
-        Controller1.Screen.print(Inertial1.heading(deg));*/
+        if (!Inertial1.isCalibrating()) {
+            Controller1.Screen.setCursor(0,0);
+            Controller1.Screen.print(X);
+            Controller1.Screen.setCursor(2,0);
+            Controller1.Screen.print(Y);
+            Controller1.Screen.setCursor(3,0);
+            Controller1.Screen.print(Inertial1.heading(deg));
+        }
         
 
 
@@ -166,6 +167,16 @@ void turnToPosition(double x, double y, vex::directionType dir) {
     }
 }
 
+void turnToPosition(double x, double y, vex::directionType dir, double Limer) {
+    //Uses atan2 to create the value that will multiply by radians formula to convert the heading to pointing toward certain coordinates:
+    if (dir == fwd) {
+        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI), Limer);
+    } else if (dir == reverse) {
+        //This adds 180 to the desired orientation so that it is 180 degrees around the coordinates it should be pointing at:
+        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180, Limer);
+    }
+}
+
 //Function for travelling the distance it needs to travel to reach the coordinates, then uses the PID controller to drive that exact distance:
 void driveToPosition(double x, double y, vex::directionType dir) {
     turnToPosition(x, y, dir);
@@ -174,5 +185,16 @@ void driveToPosition(double x, double y, vex::directionType dir) {
     }
     if (dir == reverse) {
         driveIn(-getDistance(X, Y, x, y));
+    }
+}
+
+
+void driveToPosition(double x, double y, vex::directionType dir, double Limer) {
+    turnToPosition(x, y, dir);
+    if (dir == fwd) {
+        driveIn(getDistance(X, Y, x, y), Limer);
+    }
+    if (dir == reverse) {
+        driveIn(-getDistance(X, Y, x, y), Limer);
     }
 }

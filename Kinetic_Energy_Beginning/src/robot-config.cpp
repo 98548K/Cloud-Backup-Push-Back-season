@@ -20,13 +20,13 @@ motor RB = motor(PORT20, ratio6_1, false);
 motor_group RightDriveSmart = motor_group(RF, RM, RB);
 inertial Inertial1 = inertial(PORT12);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 299.24, 320, 40, mm, 0.75);
-rotation frontTracking = rotation(PORT13, false);
-rotation sideTracking = rotation(PORT14, false);
+rotation frontTracking = rotation(PORT13, true);
+rotation sideTracking = rotation(PORT14, true);
 motor BackIntake = motor(PORT10, ratio18_1, true);
 motor FrontIntake = motor(PORT21, ratio18_1, false);
 motor MiddleIntake = motor(PORT9, ratio18_1, true);
-digital_out IntakePiston = digital_out(Brain.ThreeWirePort.H);
-digital_out DescorePiston = digital_out(Brain.ThreeWirePort.F);
+digital_out IntakePiston = digital_out(Brain.ThreeWirePort.F);
+digital_out DescorePiston = digital_out(Brain.ThreeWirePort.H);
 digital_out BruteForce = digital_out(Brain.ThreeWirePort.G);
 digital_out Wing = digital_out(Brain.ThreeWirePort.E);
 optical BorderControl = optical(PORT2);
@@ -49,8 +49,8 @@ int rc_auto_loop_function_Controller1() {
       // calculate the drivetrain motor velocities from the controller joystick axies:
       // left = Axis3
       // right = Axis2
-      int drivetrainLeftSideSpeed = Controller1.Axis3.position();
-      int drivetrainRightSideSpeed = Controller1.Axis2.position();
+      int drivetrainLeftSideSpeed = Controller1.Axis3.position() / half;
+      int drivetrainRightSideSpeed = Controller1.Axis2.position() / half;
       
       // check if the value is inside of the deadband range:
       if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
@@ -81,12 +81,12 @@ int rc_auto_loop_function_Controller1() {
       
       // only tell the left drive motor to spin if the values are not in the deadband range:
       if (DrivetrainLNeedsToBeStopped_Controller1) {
-        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
+        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed / half, percent);
         LeftDriveSmart.spin(forward);
       }
       // only tell the right drive motor to spin if the values are not in the deadband range:
       if (DrivetrainRNeedsToBeStopped_Controller1) {
-        RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
+        RightDriveSmart.setVelocity(drivetrainRightSideSpeed / half, percent);
         RightDriveSmart.spin(forward);
       }
 
@@ -107,4 +107,14 @@ void vexcodeInit( void ) {
   //Starting setup code here:
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
+  Controller1.Screen.clearScreen();
+  Inertial1.calibrate();
+  while (Inertial1.isCalibrating()) {
+    Inertial1.setHeading(263, deg);
+    X = 55;
+    Y = -22;
+    Controller1.Screen.setCursor(0,0);
+    Controller1.Screen.print("Calibrating");
+  }
+  Controller1.Screen.clearScreen();
 }

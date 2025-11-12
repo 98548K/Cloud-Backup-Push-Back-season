@@ -3,10 +3,10 @@
 
 void autonomous(void) {
     if (auton == "Skills") {
-        
+        Bad_Skills();
     }
-    else if (auton == "Right Blue") {
-        
+    else if (auton == "Left") {
+        Left();
     }
     else if (auton == "Left Blue") {
         
@@ -14,8 +14,8 @@ void autonomous(void) {
     else if (auton == "Right Red") {
         
     }
-    else if (auton == "Left Red") {
-        
+    else if (auton == "Left") {
+        Left();
     }
     else if (auton == "Blue 2 ring") {
         
@@ -60,6 +60,7 @@ void autonomous(void) {
         
     }
     else {
-        
+        Left();
+        //Bad_Skills();
     }
 }
