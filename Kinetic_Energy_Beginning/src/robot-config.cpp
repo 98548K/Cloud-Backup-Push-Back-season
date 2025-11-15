@@ -40,6 +40,9 @@ bool Controller1RightShoulderControlMotorsStopped = true;
 bool DrivetrainLNeedsToBeStopped_Controller1 = true;
 bool DrivetrainRNeedsToBeStopped_Controller1 = true;
 
+int drivetrainLeftSideSpeed;
+int drivetrainRightSideSpeed;
+
 // define a task that will handle monitoring inputs from Controller1:
 int rc_auto_loop_function_Controller1() {
   // process the controller input every 20 milliseconds:
@@ -49,8 +52,8 @@ int rc_auto_loop_function_Controller1() {
       // calculate the drivetrain motor velocities from the controller joystick axies:
       // left = Axis3
       // right = Axis2
-      int drivetrainLeftSideSpeed = Controller1.Axis3.position() / half;
-      int drivetrainRightSideSpeed = Controller1.Axis2.position() / half;
+      drivetrainLeftSideSpeed = Controller1.Axis3.position() / half;
+      drivetrainRightSideSpeed = Controller1.Axis2.position() / half;
       
       // check if the value is inside of the deadband range:
       if (drivetrainLeftSideSpeed < 5 && drivetrainLeftSideSpeed > -5) {
@@ -110,9 +113,9 @@ void vexcodeInit( void ) {
   Controller1.Screen.clearScreen();
   Inertial1.calibrate();
   while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(263, deg);
-    X = 55;
-    Y = -22;
+    Inertial1.setHeading(180, deg);
+    X = 0;
+    Y = 0;
     Controller1.Screen.setCursor(0,0);
     Controller1.Screen.print("Calibrating");
   }

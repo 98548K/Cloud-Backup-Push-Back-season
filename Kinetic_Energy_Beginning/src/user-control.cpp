@@ -82,11 +82,11 @@ void usercontrol(void) {
     }
     //Intake medium
     else if (Controller1.ButtonL1.pressing()){
-      intakeMedium();
+      intakeLong();
     }
     //Intake long
     else if (Controller1.ButtonL2.pressing()){
-      intakeLong();
+      intakeMedium();
     }
     //Stop intakes
     else {

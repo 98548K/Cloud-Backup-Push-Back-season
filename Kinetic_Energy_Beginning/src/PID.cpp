@@ -12,7 +12,7 @@ Kasens tuning tips (numerical order of tuning):
 
 
 double kP = 2.2;//0.0
-double kI = 0.014;//0.0
+double kI = 0.013;//0.0
 double kD = 0.2;//0.0
 
 double turnKP = 0.45;//0.0
@@ -22,10 +22,10 @@ double turnKD = 0.4;//0.0
 double wheelRad = 1.0;//0.0
 
 double turnTolerance = 1.0;//0.0
-double driveTolerance = 0.1;//0.0
+double driveTolerance = 0.5;//0.0
 
 //Will continue using the integral until it's the limit away from its destination
-double driveIntegralLimit = 0.0;//20.0
+double driveIntegralLimit = 2.0;//20.0
 double turnIntegralLimit = 2.0;//30.0
 
 const double drivetrainWidth = 13.0;//↔
@@ -145,7 +145,7 @@ class PID {
                     pwr = error * turnKP + integral * turnKI + derivative * turnKD;
                     LeftDriveSmart.spin(fwd, pwr, pct);
                     RightDriveSmart.spin(reverse, pwr, pct);
-                    if (std::round(Brain.timer(sec)) == timing) break;
+                    if (Brain.timer(sec) <= timing + 0.1 && Brain.timer(sec) >= timing - 0.1) break;
                 }
 
 
@@ -162,7 +162,7 @@ class PID {
                         RightDriveSmart.spin(fwd, pwr++, pct);
                         LeftDriveSmart.spin(fwd, pwr--, pct);
                     }
-                    if (std::round(Brain.timer(sec)) == timing) break;
+                    if (Brain.timer(sec) <= timing + 0.1 && Brain.timer(sec) >= timing - 0.1) break;
                 }
 
 

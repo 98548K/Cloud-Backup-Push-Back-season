@@ -6,6 +6,12 @@ bool ranOnce = false;
 const char*  auton = "[NULL]";
 
 
+//Quadrant 1: Top right quadrant.
+//Quadrant 2: Bottom right quadrant.
+//quadrant 3: Top left quadrant.
+//Quadrant 4: Bottom left quadrant.
+
+
 void field() {
   //This is the field:
   Brain.Screen.setFillColor(black);
@@ -284,10 +290,10 @@ void touch() {
     if (Brain.Screen.xPosition() < 250 && Brain.Screen.xPosition() > 125 && Brain.Screen.yPosition() < 120) {
       clear_menu();
       quadrant = 1;
-      autoVector = {"Right Blue", "Empty2", "Empty3", "Empty4"};
+      autoVector = {"Right", "Empty2", "Empty3", "Empty4"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(277, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
@@ -304,10 +310,10 @@ void touch() {
     else if (Brain.Screen.xPosition() > 0 && Brain.Screen.xPosition() < 125 && Brain.Screen.yPosition() > 120) {
       clear_menu();
       quadrant = 3;
-      autoVector = {"Right Red", "Empty10", "Empty11", "Empty12"};
+      autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(277, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
@@ -345,10 +351,10 @@ void touch() {
     }
 
     else if (quadrant == 1) {
-      autoVector = {"Right Blue", "Empty2", "Empty3", "Empty4"};
+      autoVector = {"Right", "Empty2", "Empty3", "Empty4"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(277, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
@@ -357,19 +363,19 @@ void touch() {
 
 
     else if (quadrant == 2) {
-      autoVector = {"Left Blue", "Empty6", "Empty7", "Empty8"};
+      autoVector = {"Left", "Empty6", "Empty7", "Empty8"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(263, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
      
     else if (quadrant == 3) {
-      autoVector = {"Right Red", "Empty10", "Empty11", "Empty12"};
+      autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(277, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
@@ -378,10 +384,10 @@ void touch() {
 
 
     else if (quadrant == 4) {
-      autoVector = {"Left Red", "Empty14", "Empty15", "Empty16"};
+      autoVector = {"Left", "Empty14", "Empty15", "Empty16"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(0, 0, 0, 0);
+      beginHeading = startHeading(263, 0, 0, 0);
       X = startX(0, 0, 0, 0);
       Y = startY(0, 0, 0, 0);
     }
@@ -398,6 +404,7 @@ void touch() {
       }
     }
 
+    Brain.Screen.render();
 
     Brain.Screen.setFont(monoXL);
     Brain.Screen.setPenColor(green);

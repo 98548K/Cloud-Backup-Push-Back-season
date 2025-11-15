@@ -36,7 +36,6 @@ int main() {
 
   pre_auton();
 
-  
   while (true) {
     wait(100, msec);
   }

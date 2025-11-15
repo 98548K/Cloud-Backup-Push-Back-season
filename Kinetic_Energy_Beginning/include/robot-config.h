@@ -25,4 +25,7 @@ extern optical BorderControl;
 
 extern bool RemoteControlCodeEnabled;
 
+extern int drivetrainLeftSideSpeed;
+extern int drivetrainRightSideSpeed;
+
 void  vexcodeInit( void );

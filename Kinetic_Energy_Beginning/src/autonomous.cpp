@@ -8,11 +8,11 @@ void autonomous(void) {
     else if (auton == "Left") {
         Left();
     }
-    else if (auton == "Left Blue") {
-        
+    else if (auton == "Right") {
+        Right();
     }
-    else if (auton == "Right Red") {
-        
+    else if (auton == "Right") {
+        Right();
     }
     else if (auton == "Left") {
         Left();
@@ -60,7 +60,10 @@ void autonomous(void) {
         
     }
     else {
-        Left();
+        //Left();
+        //Right();
         //Bad_Skills();
+        //curveToPosition(24, 24);
+        Skills();
     }
 }

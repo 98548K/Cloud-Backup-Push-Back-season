@@ -21,12 +21,12 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
 
 
         if (validateHeading(((atan2(pltX[l] - X, pltY[l] - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(pltX[l] - X, pltY[l] - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
-            linearVel = -40;
+            linearVel = -20;
             //Standard P controller.
             turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) - 180) * turnCurveP);
         }
         else {
-            linearVel = 40;
+            linearVel = 20;
             //Standard P controller.
             turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
         }
