@@ -2,6 +2,11 @@
 
 //Coding motivation here: https://www.youtube.com/watch?v=ruAlvlacEuM
 
+double setPoint;
+double deployRange;
+double loggedPosition;
+
+
 int sortColorRed() {
   while (true) {
     if (BorderControl.hue() >= 10 && BorderControl.hue() <= 350 && BorderControl.objectDetectThreshold(50)) {

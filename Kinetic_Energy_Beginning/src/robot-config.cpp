@@ -21,15 +21,18 @@ motor_group RightDriveSmart = motor_group(RF, RM, RB);
 inertial Inertial1 = inertial(PORT12);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 299.24, 320, 40, mm, 0.75);
 rotation frontTracking = rotation(PORT13, true);
-rotation sideTracking = rotation(PORT14, true);
+rotation sideTracking = rotation(PORT14, false);
 motor BackIntake = motor(PORT10, ratio18_1, true);
 motor FrontIntake = motor(PORT21, ratio18_1, false);
 motor MiddleIntake = motor(PORT9, ratio18_1, true);
-digital_out IntakePiston = digital_out(Brain.ThreeWirePort.F);
+digital_out BottomIntakePiston = digital_out(Brain.ThreeWirePort.F);
+digital_out TopIntakePiston = digital_out(Brain.ThreeWirePort.E);
 digital_out DescorePiston = digital_out(Brain.ThreeWirePort.H);
-digital_out BruteForce = digital_out(Brain.ThreeWirePort.G);
-digital_out Wing = digital_out(Brain.ThreeWirePort.E);
+digital_out BruteForce = digital_out(Brain.ThreeWirePort.A);
+digital_out Wing = digital_out(Brain.ThreeWirePort.G);
 optical BorderControl = optical(PORT2);
+gps GPS1 = gps(PORT2);
+gps GPS2 = gps(PORT22);
 
 
 
@@ -84,12 +87,12 @@ int rc_auto_loop_function_Controller1() {
       
       // only tell the left drive motor to spin if the values are not in the deadband range:
       if (DrivetrainLNeedsToBeStopped_Controller1) {
-        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed / half, percent);
+        LeftDriveSmart.setVelocity(drivetrainLeftSideSpeed, percent);
         LeftDriveSmart.spin(forward);
       }
       // only tell the right drive motor to spin if the values are not in the deadband range:
       if (DrivetrainRNeedsToBeStopped_Controller1) {
-        RightDriveSmart.setVelocity(drivetrainRightSideSpeed / half, percent);
+        RightDriveSmart.setVelocity(drivetrainRightSideSpeed, percent);
         RightDriveSmart.spin(forward);
       }
 
@@ -105,19 +108,25 @@ int rc_auto_loop_function_Controller1() {
  * 
  * This should be called at the start of your int main function.
  */
+
+void auto_run() {
+  Inertial1.calibrate();
+  while (Inertial1.isCalibrating()) {
+    Inertial1.setHeading(277, deg);
+    X = 55;
+    Y = 22;
+    Controller1.Screen.setCursor(0,0);
+    Controller1.Screen.print("Calibrating");
+  }
+}
+
+
 void vexcodeInit( void ) {
   task rc_auto_loop_task_Controller1(rc_auto_loop_function_Controller1);
   //Starting setup code here:
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  Inertial1.calibrate();
-  while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(180, deg);
-    X = 0;
-    Y = 0;
-    Controller1.Screen.setCursor(0,0);
-    Controller1.Screen.print("Calibrating");
-  }
+  //auto_run();
   Controller1.Screen.clearScreen();
 }

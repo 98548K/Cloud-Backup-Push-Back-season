@@ -1,4 +1,6 @@
 extern double beginHeading;
+extern double beginX;
+extern double beginY;
 
 void Left();
 

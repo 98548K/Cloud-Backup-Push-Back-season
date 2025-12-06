@@ -14,40 +14,47 @@ bool deScore;
 bool wingIt;
 bool Xpressed;
 
-int half = 1;
+double half = 1;
 
 void intakeFill() {
+  TopIntakePiston.set(false);
   BackIntake.stop();
   MiddleIntake.spin(fwd, 100, pct);
   FrontIntake.spin(fwd, 100, pct);
 }
 
 void outtake() {
+  TopIntakePiston.set(false);
   BackIntake.stop();
   MiddleIntake.spin(reverse, 100, pct);
   FrontIntake.spin(reverse, 100, pct);
 }
 
 void intakeLong() {
-  BackIntake.spin(reverse, 50, pct);
+  BackIntake.spin(reverse, 25, pct);
   MiddleIntake.stop();
   FrontIntake.stop();
+  wait (15, msec);
+  TopIntakePiston.set(true);
 }
 
 void intakeMedium() {
   BackIntake.spin(fwd, 100, pct);
   MiddleIntake.stop();
   FrontIntake.stop();
+  wait (15, msec);
+  TopIntakePiston.set(true);
 }
 
 void stopIntakes() {
+  TopIntakePiston.set(false);
   BackIntake.stop();
   MiddleIntake.stop();
   FrontIntake.stop();
 }
 
 void usercontrol(void) {
-    Drivetrain.setStopping(coast);
+    Drivetrain.setStopping(coast); 
     Drivetrain.setDriveVelocity(100, pct);
     LeftDriveSmart.setStopping(coast);
     RightDriveSmart.setStopping(coast);
@@ -63,14 +70,17 @@ void usercontrol(void) {
     RightDriveSmart.setStopping(coast);
 
     if (Controller1.ButtonR1.pressing() && Controller1.ButtonL1.pressing()) {
-      BackIntake.spin(reverse, 100, pct);
+      BackIntake.spin(reverse, 75, pct);
       MiddleIntake.spin(fwd, 100, pct);
       FrontIntake.spin(fwd, 100, pct);
+      wait (15, msec);
+      TopIntakePiston.set(true);
     }
     else if (Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
       BackIntake.spin(fwd, 100, pct);
       MiddleIntake.spin(fwd, 100, pct);
       FrontIntake.spin(fwd, 100, pct);
+      wait (15, msec);
     }
     //Intake fill
     else if (Controller1.ButtonR1.pressing()){
@@ -103,7 +113,7 @@ void usercontrol(void) {
         toggleIntakePiston = true;
         wait (200, msec);
       }
-      IntakePiston.set(toggleIntakePiston);
+      BottomIntakePiston.set(toggleIntakePiston);
     }
 
 

@@ -4,9 +4,9 @@ using namespace std;
 
 //Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
 //Horizontal distance from the side of the forward/backward tracking wheel to center:
-const double horizontalTrackingCenter = -3.5;
+double horizontalTrackingCenter = -3.0;
 //Vertical distance from the side of the left/right tracking wheel to center:
-const double verticalTrackingCenter = 2.5;
+double verticalTrackingCenter = 4.0;
 
 //Tracking wheel measurments in inches:
 double FRONT_WHEEL;
@@ -47,6 +47,20 @@ double leftDriveBackY;
 double rightDriveBackX;
 double rightDriveBackY;
 
+//GPS variables:
+double offsetGPS1X;
+double offsetGPS1Y;
+
+double offsetGPS2X;
+double offsetGPS2Y;
+
+//For GPS 1:
+const double horizDist1 = -4;
+const double vertDist1 = 0;
+
+//For GPS 2:
+const double horizDist2 = 0;
+const double vertDist2 = 0;
 
 /*
 
@@ -71,7 +85,8 @@ int positionTracking() {
         averageRadianHeading = radianHeading - (deltaRadianHeading / 2);
 
 
-        //This is the math implemented from the video and sources from vex forum so I don't understand it as well. 
+
+        //This is the math implemented from the video and sources from vex forum so I don't understand it as well.
         //It's also the core math for calculating the coordinates. The rest is update math and orientation math.
 
         //If statement for determining whether the robot needs to use arc math in case of change in orientation or
@@ -90,8 +105,8 @@ int positionTracking() {
             YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter);
         }
 
-        deltaX = (YCalculation * sin(averageRadianHeading)) + (XCalculation * cos(averageRadianHeading));
-        deltaY = (YCalculation * cos(averageRadianHeading)) - (XCalculation * sin(averageRadianHeading));
+        deltaX = (YCalculation * sin(averageRadianHeading)) - (XCalculation * cos(averageRadianHeading));
+        deltaY = (YCalculation * cos(averageRadianHeading)) + (XCalculation * sin(averageRadianHeading));
         //
 
 
@@ -130,6 +145,11 @@ int positionTracking() {
         }
         
 
+        offsetGPS1X = (GPS1.xPosition(inches)) + horizDist1 * cos(radianHeading) - vertDist1 * sin(radianHeading);
+        offsetGPS1Y = (GPS1.yPosition(inches)) + horizDist1 * sin(radianHeading) + vertDist1 * cos(radianHeading);
+
+        offsetGPS2X = (GPS2.yPosition(inches)) + horizDist2 * cos(radianHeading) + vertDist2 * sin(radianHeading);
+        offsetGPS2Y = (GPS2.yPosition(inches)) + horizDist2 * sin(radianHeading) + vertDist2 * cos(radianHeading);
 
         //wait (25, msec);
         task::sleep(10);

@@ -10,4 +10,4 @@ void intakeMedium();
 
 void stopIntakes();
 
-extern int half;
+extern double half;

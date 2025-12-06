@@ -9,10 +9,8 @@ Kasens tuning tips (numerical order of tuning):
 2. kD values = make it as low as possible without it becoming unstable. Have it ramp itself down and try to do it without the abrupt stops and without any hint of oscillation or going back and forth.
 */
 
-
-
 double kP = 2.2;//0.0
-double kI = 0.013;//0.0
+double kI = 0.014;//0.0
 double kD = 0.2;//0.0
 
 double turnKP = 0.45;//0.0
@@ -29,7 +27,7 @@ double driveIntegralLimit = 2.0;//20.0
 double turnIntegralLimit = 2.0;//30.0
 
 const double drivetrainWidth = 13.0;//↔
-const double drivetrainLength = 13.5;//↕
+const double drivetrainLength = 15.5;//↕
 
 
 //Function for determining the turn direction. Credit to Caleb Carlson for making this function easy to find (https://www.vexforum.com/t/turning-with-pid-how-to-find-the-shortest-turn/110258/6):
@@ -55,21 +53,22 @@ class PID {
         double storedTrackingMeasurements;
         double storedHeading;
         double resetCurrentPosition;
-        double turnDifference;
         double timing;
+        double deployRange;
         //Declaring what instance of motor control it is:
         bool timerEnabled;
         bool isTurning;
         bool isDriving;
     //PID class parameter setup:
     public:
-        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool TimerEnabled, double Timing) {
+        PID(double DesiredValue, bool IsDriving, bool IsTurning, bool TimerEnabled, double Timing, double DeployRange) {
             desiredValue = DesiredValue;
             error = DesiredValue;
             isTurning = IsTurning;
             isDriving = IsDriving;
             timerEnabled = TimerEnabled;
             timing = Timing;
+            deployRange = DeployRange;
         }
 
         void run() {
@@ -165,6 +164,22 @@ class PID {
                     if (Brain.timer(sec) <= timing + 0.1 && Brain.timer(sec) >= timing - 0.1) break;
                 }
 
+                else if (isDriving && deployRange < desiredValue) {
+                    //This section is just drive PID:
+                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
+                    pwr = error * kP + integral * kI + derivative * kD;
+                    if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
+                        RightDriveSmart.spin(fwd, pwr--, pct);
+                        LeftDriveSmart.spin(fwd, pwr++, pct);
+                    }
+                    else if (constrainAngle(storedHeading - Inertial1.heading(deg)) > 0) {
+                        RightDriveSmart.spin(fwd, pwr++, pct);
+                        LeftDriveSmart.spin(fwd, pwr--, pct);
+                    }
+                    if (error == 0) break;
+                    if (error <= deployRange) DescorePiston.set(true);
+                    if (error >= -driveTolerance && error <= driveTolerance) break;
+                }
 
                 wait (15, msec);
             }
@@ -175,13 +190,13 @@ class PID {
 
 //Drive PID function:
 void driveIn(double driveDist) {
-    PID drivePID(driveDist, true, false, false, 0);
+    PID drivePID(driveDist, true, false, false, 0, driveDist);
     drivePID.run();
 }
 
 //Turn PID function:
 void turnToHeading(double turnHeading) {
-    PID turnPID(turnHeading, false, true, false, 0);
+    PID turnPID(turnHeading, false, true, false, 0, 0);
     turnPID.run();
 }
 
@@ -191,7 +206,7 @@ double startTimer;
 void driveIn(double driveDist, double drivePeriod) {
     startTimer = Brain.timer(sec);
     Brain.resetTimer();
-    PID timedDrivePID(driveDist, true, false, true, drivePeriod);
+    PID timedDrivePID(driveDist, true, false, true, drivePeriod, driveDist);
     timedDrivePID.run();
     Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }
@@ -200,7 +215,13 @@ void driveIn(double driveDist, double drivePeriod) {
 void turnToHeading(double turnHeading, double turnPeriod) {
     startTimer = Brain.timer(sec);
     Brain.resetTimer();
-    PID timedTurnPID(turnHeading, false, true, true, turnPeriod);
+    PID timedTurnPID(turnHeading, false, true, true, turnPeriod, 0);
     timedTurnPID.run();
     Brain.setTimer(Brain.timer(sec) + startTimer, sec);
+}
+
+
+void driveInWithPiston(double driveDist, double DeployRange) {
+    PID drivePID(driveDist, true, false, false, 0, DeployRange);
+    drivePID.run();
 }

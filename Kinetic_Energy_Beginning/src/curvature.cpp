@@ -6,7 +6,7 @@ double turnVel;
 double desiredX;
 double desiredY;
 
-double turnCurveP = 0.6;
+double turnCurveP = 0.9;
 
 double desiredDist;
 
@@ -27,7 +27,7 @@ void curvature(double lX, double lY) {
         if (validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
             linearVel = -50;
             //Standard P controller.
-            turnVel = (-constrainAngle((desiredHeading - Inertial1.heading(deg)) + 180) * turnCurveP);
+            turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) + 180) * turnCurveP);
         }
         else {
             linearVel = 50;

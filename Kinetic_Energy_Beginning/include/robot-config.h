@@ -16,12 +16,18 @@ extern motor FrontIntake;
 extern motor MiddleIntake;
 
 
-extern digital_out IntakePiston;
+extern digital_out BottomIntakePiston;
+extern digital_out TopIntakePiston;
 extern digital_out DescorePiston;
 extern digital_out BruteForce;
 extern digital_out Wing;
 
+extern digital_out No_Piston;
+extern motor No_Motor;
+
 extern optical BorderControl;
+extern gps GPS1;
+extern gps GPS2;
 
 extern bool RemoteControlCodeEnabled;
 

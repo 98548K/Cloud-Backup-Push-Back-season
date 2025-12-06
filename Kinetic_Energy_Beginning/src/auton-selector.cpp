@@ -224,23 +224,15 @@ double externHeading;
 double startHeading(double row1, double row2, double row3, double row4) {
   if (auton == autoVector[0]) {
     externHeading = row1;
-    X = row1;
-    Y = row1;
   }
   else if (auton == autoVector[1]) {
     externHeading = row2;
-    X = row2;
-    Y = row2;
   }
   else if (auton == autoVector[2]) {
     externHeading = row3;
-    X = row3;
-    Y = row3;
   }
   else if (auton == autoVector[3]) {
     externHeading = row4;
-    X = row4;
-    Y = row4;
   }
   return externHeading;
 }
@@ -290,42 +282,18 @@ void touch() {
     if (Brain.Screen.xPosition() < 250 && Brain.Screen.xPosition() > 125 && Brain.Screen.yPosition() < 120) {
       clear_menu();
       quadrant = 1;
-      autoVector = {"Right", "Empty2", "Empty3", "Empty4"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(277, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
     }
     else if (Brain.Screen.xPosition() < 250 && Brain.Screen.xPosition() > 125 && Brain.Screen.yPosition() > 120) {
       clear_menu();
       quadrant = 2;
-      autoVector = {"Left", "Empty6", "Empty7", "Empty8"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(263, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
     }
     else if (Brain.Screen.xPosition() > 0 && Brain.Screen.xPosition() < 125 && Brain.Screen.yPosition() > 120) {
       clear_menu();
       quadrant = 3;
-      autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(277, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
     }
     else if (Brain.Screen.xPosition() > 0 && Brain.Screen.xPosition() < 125 && Brain.Screen.yPosition() < 120) {
       clear_menu();
       quadrant = 4;
-      autoVector = {"Left", "Empty14", "Empty15", "Empty16"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(263, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
     }
 
     if (quadrant == 0) {
@@ -338,6 +306,9 @@ void touch() {
       Brain.Screen.printAt(251, 235, "Other Blue");
       if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() > 50 && Brain.Screen.yPosition() < 100) {
         auton = "Skills";
+        beginHeading = 327;
+        beginX = 50;
+        beginY = 23.5;
       }
       else if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() < 150) {
         isCalibrated = true;
@@ -355,8 +326,8 @@ void touch() {
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       beginHeading = startHeading(277, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
+      beginX = startX(55, 0, 0, 0);
+      beginY = startY(22, 0, 0, 0);
     }
 
 
@@ -367,8 +338,8 @@ void touch() {
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       beginHeading = startHeading(263, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
+      beginX = startX(55, 0, 0, 0);
+      beginY = startY(-22, 0, 0, 0);
     }
      
     else if (quadrant == 3) {
@@ -376,8 +347,8 @@ void touch() {
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       beginHeading = startHeading(277, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
+      beginX = startX(55, 0, 0, 0);
+      beginY = startY(22, 0, 0, 0);
     }
 
 
@@ -388,16 +359,15 @@ void touch() {
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       beginHeading = startHeading(263, 0, 0, 0);
-      X = startX(0, 0, 0, 0);
-      Y = startY(0, 0, 0, 0);
+      beginX = startX(55, 0, 0, 0);
+      beginY = startY(-22, 0, 0, 0);
     }
-    int dt = Brain.timer(sec);
 
     
     if (!enabledComp()) {
       if (Inertial1.isCalibrating()) {
         Inertial1.setHeading(beginHeading, deg);
-        setDrivePosition(X, Y, beginHeading);
+        setDrivePosition(beginX, beginY, beginHeading);
       }
       else if (std::round(Inertial1.heading(deg)) != validateHeading(beginHeading) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 2) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 2)) {
         Inertial1.calibrate();
@@ -411,7 +381,6 @@ void touch() {
     Brain.Screen.setFillColor(black);
     Brain.Screen.printAt(251, 40, "                ");
     Brain.Screen.printAt(251, 40, auton);
-    //It's not a bug, it's a feature:
     if (isCalibrated && !ranOnce) {
       Inertial1.calibrate();
       Brain.Screen.printAt(251, 140, "3           ");

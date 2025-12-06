@@ -3,8 +3,8 @@ extern double SIDE_WHEEL;
 extern double X;
 extern double Y;
 extern double radianHeading;
-extern const double horizontalTrackingCenter;
-extern const double verticalTrackingCenter;
+extern double horizontalTrackingCenter;
+extern double verticalTrackingCenter;
 extern int positionTracking();
 void setDrivePosition(double x, double y, double startHeading);
 void turnToPosition(double x, double y, vex::directionType dir);
@@ -21,3 +21,9 @@ extern double leftDriveBackX;
 extern double leftDriveBackY;
 extern double rightDriveBackX;
 extern double rightDriveBackY;
+
+extern double offsetGPS1X;
+extern double offsetGPS1Y;
+
+extern double offsetGPS2X;
+extern double offsetGPS2Y;

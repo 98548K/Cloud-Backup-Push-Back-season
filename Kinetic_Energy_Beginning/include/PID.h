@@ -10,6 +10,8 @@ void driveIn(double driveDist, double drivePeriod);
 
 void turnToHeading(double turnHeading, double turnPeriod);
 
+void driveInWithPiston(double driveDist, double DeployRange);
+
 extern double constrainAngle(double x);
 
 extern double turnKP;
@@ -22,3 +24,6 @@ extern double kD;
 
 extern double storedTrackingMeasurements;
 extern double resetCurrentPosition;
+
+extern double turnIntegralLimit;
+extern double driveIntegralLimit;
