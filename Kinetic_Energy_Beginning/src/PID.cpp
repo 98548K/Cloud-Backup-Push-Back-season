@@ -1,34 +1,73 @@
 #include "vex.h"
 
+//Tuning constants
+double kP;
+double kI;
+double kD;
 
-/*
-Kasens tuning tips (numerical order of tuning):
+void longDrive() {
+    kP = 1.7;
+    kI = 0.013;
+    kD = 3.2;
+    driveIntegralLimit = 5.0;
+}
 
-1. kP values = make it as high as possible without it becoming unstable. Tune it until it has oscillated or goes back and forth for two rounds.
-3. kI values = make it as high as possible without it becoming unstable. If it messes up you have the wrong value. Thats the best advice I can give.
-2. kD values = make it as low as possible without it becoming unstable. Have it ramp itself down and try to do it without the abrupt stops and without any hint of oscillation or going back and forth.
-*/
+void shortDrive() {
+    kP = 2.2;
+    kI = 0.026;
+    kD = 3.1;
+    driveIntegralLimit = 3.5;
+}
+//double kP = 1.7;
+//double kI = 0.013;
+//double kD = 3.2;
 
-double kP = 2.2;//0.0
-double kI = 0.014;//0.0
-double kD = 0.2;//0.0
+//double driveTolerance = 0.5;
 
-double turnKP = 0.45;//0.0
-double turnKI = 0.000001;//0.0
-double turnKD = 0.4;//0.0
+//double turnKP = 0.39;
+//double turnKI = 0.0007;
+//double turnKD = 0.67;
+
+//double driveIntegralLimit = 5.0;
+//double turnIntegralLimit = 5.0;
+
+
+//Short distance:
+
+
+double turnKP;
+double turnKI;
+double turnKD;
+
+
+void longTurn() {
+    turnKP = 0.39;
+    turnKI = 0.0007;
+    turnKD = 0.67;
+    turnIntegralLimit = 5.0;
+}
+
+void shortTurn() {
+    turnKP = 0.5;
+    turnKI = 0.0;
+    turnKD = 1.3;
+}
+
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 1.0;//0.0
-double driveTolerance = 0.5;//0.0
+double turnTolerance = 1;//0.5
+double driveTolerance = 0.25;//0.25
 
 //Will continue using the integral until it's the limit away from its destination
-double driveIntegralLimit = 2.0;//20.0
-double turnIntegralLimit = 2.0;//30.0
+double driveIntegralLimit;
+double turnIntegralLimit;
 
 const double drivetrainWidth = 13.0;//↔
 const double drivetrainLength = 15.5;//↕
 
+
+double resetCurrentPosition;
 
 //Function for determining the turn direction. Credit to Caleb Carlson for making this function easy to find (https://www.vexforum.com/t/turning-with-pid-how-to-find-the-shortest-turn/110258/6):
 double constrainAngle(double x) {
@@ -52,7 +91,6 @@ class PID {
         double prevError;
         double storedTrackingMeasurements;
         double storedHeading;
-        double resetCurrentPosition;
         double timing;
         double deployRange;
         //Declaring what instance of motor control it is:
@@ -75,12 +113,12 @@ class PID {
             integral = 0;
             error = 0;
             //This accounts for the tracking wheel measuremants in PID:
-            storedTrackingMeasurements = frontTracking.position(turns);
+            storedTrackingMeasurements = frontTracking.position(turns) * (wheelRad * 2) * M_PI;
 
             storedHeading = Inertial1.heading(deg);
             while (true) {
                 //This simmulates drive PID starting at 0:
-                resetCurrentPosition = frontTracking.position(turns) - storedTrackingMeasurements;
+                resetCurrentPosition = (frontTracking.position(turns) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
 
                 //This is nescessarry for odometry to work so we don't have to reset the forward/sideways tracking position.
                 //It instead starts where the tracking position is to 0 allowing it to use distance values instead of coordinate values.
@@ -90,9 +128,6 @@ class PID {
                 //
 
                 //Stops using integral in the power once the condition is met:
-                if (error <= turnTolerance && error >= turnTolerance  && isTurning) {
-                    integral = 0;
-                }
                 if (std::abs(error) < turnIntegralLimit && isTurning) {
                     integral = 0;
                 } else if (std::abs(error) < driveIntegralLimit && (isDriving)) {
@@ -123,8 +158,8 @@ class PID {
                 //Class initialization for driving:
                 else if (isDriving && !timerEnabled) {
                     //This section is just drive PID:
-                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
-                    pwr = error * kP + integral * kI + derivative * kD;
+                    error = desiredValue - resetCurrentPosition;
+                    pwr = (error * kP) + (integral * kI) + (derivative * kD);
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
                         RightDriveSmart.spin(fwd, pwr--, pct);
                         LeftDriveSmart.spin(fwd, pwr++, pct);
@@ -151,7 +186,7 @@ class PID {
                 //Class initialization for driving with timer:
                 else if (isDriving && timerEnabled) {
                     //This section is just drive PID:
-                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
+                    error = desiredValue - resetCurrentPosition;
                     pwr = error * kP + integral * kI + derivative * kD;
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
                         RightDriveSmart.spin(fwd, pwr--, pct);
@@ -166,7 +201,7 @@ class PID {
 
                 else if (isDriving && deployRange < desiredValue) {
                     //This section is just drive PID:
-                    error = desiredValue - resetCurrentPosition * (wheelRad * 2) * M_PI;
+                    error = desiredValue - resetCurrentPosition;
                     pwr = error * kP + integral * kI + derivative * kD;
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
                         RightDriveSmart.spin(fwd, pwr--, pct);

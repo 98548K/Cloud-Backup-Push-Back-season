@@ -6,7 +6,7 @@ double turnVel;
 double desiredX;
 double desiredY;
 
-double turnCurveP = 0.9;
+double turnCurveP = 0.5;
 
 double desiredDist;
 
@@ -25,12 +25,12 @@ void curvature(double lX, double lY) {
 
 
         if (validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
-            linearVel = -50;
+            linearVel = -40;
             //Standard P controller.
             turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) + 180) * turnCurveP);
         }
         else {
-            linearVel = 50;
+            linearVel = 40;
             //Standard P controller.
             turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
         }
@@ -51,10 +51,27 @@ void curveToPosition(double desiredX, double desiredY) {
     while (true) {
         curvature(desiredX, desiredY);
         //If both values are within their certain tolerance, the function will terminate:
-        if (getDistance(X, Y, desiredX, desiredY) <= 3) {
+        if (getDistance(X, Y, desiredX, desiredY) <= 6) {
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
             break;
         }
     }
+}
+
+double preservedTime;
+
+void curveToPosition(double desiredX, double desiredY, double time) {
+    preservedTime = Brain.timer(sec) <= time;
+    Brain.resetTimer();
+    while (true) {
+        curvature(desiredX, desiredY);
+        //If both values are within their certain tolerance, the function will terminate:
+        if (Brain.timer(sec) <= time + 0.1 && Brain.timer(sec) >= time - 0.1) {
+            LeftDriveSmart.stop(brake);
+            RightDriveSmart.stop(brake);
+            break;
+        }
+    }
+    Brain.setTimer(Brain.timer(sec) + preservedTime, sec);
 }

@@ -30,9 +30,11 @@ digital_out TopIntakePiston = digital_out(Brain.ThreeWirePort.E);
 digital_out DescorePiston = digital_out(Brain.ThreeWirePort.H);
 digital_out BruteForce = digital_out(Brain.ThreeWirePort.A);
 digital_out Wing = digital_out(Brain.ThreeWirePort.G);
-optical BorderControl = optical(PORT2);
-gps GPS1 = gps(PORT2);
-gps GPS2 = gps(PORT22);
+//Don't ask...
+digital_out trackingWheelPiston = digital_out(Brain.ThreeWirePort.D);
+optical BorderControl = optical(PORT22);
+gps GPS1 = gps(PORT2, 87);
+gps GPS2 = gps(PORT6, 270);
 
 
 
@@ -111,10 +113,12 @@ int rc_auto_loop_function_Controller1() {
 
 void auto_run() {
   Inertial1.calibrate();
-  while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(277, deg);
-    X = 55;
-    Y = 22;
+  runGPS1.suspend();
+  runGPS2.suspend();
+  while (Inertial1.isCalibrating() ) {
+    Inertial1.setHeading(GPS2.heading(deg), deg);
+    X = offsetGPS2X;
+    Y = offsetGPS2Y;
     Controller1.Screen.setCursor(0,0);
     Controller1.Screen.print("Calibrating");
   }
@@ -127,6 +131,6 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  //auto_run();
+  auto_run();
   Controller1.Screen.clearScreen();
 }

@@ -24,10 +24,18 @@ void intakeFill() {
 }
 
 void outtake() {
-  TopIntakePiston.set(false);
-  BackIntake.stop();
-  MiddleIntake.spin(reverse, 100, pct);
-  FrontIntake.spin(reverse, 100, pct);
+  if (toggleIntakePiston == false) {
+    TopIntakePiston.set(false);
+    BackIntake.stop();
+    MiddleIntake.spin(reverse, 100, pct);
+    FrontIntake.spin(reverse, 100, pct);
+  }
+  else {
+    TopIntakePiston.set(false);
+    BackIntake.stop();
+    MiddleIntake.spin(reverse, 100, pct);
+    FrontIntake.spin(reverse, 40, pct);
+  }
 }
 
 void intakeLong() {
@@ -61,6 +69,7 @@ void usercontrol(void) {
     FrontIntake.setVelocity(100, pct);
     MiddleIntake.setVelocity(100, pct);
     BackIntake.setVelocity(100, pct);
+    trackingWheelPiston.set(true);
 
 
 
@@ -77,10 +86,19 @@ void usercontrol(void) {
       TopIntakePiston.set(true);
     }
     else if (Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
-      BackIntake.spin(fwd, 100, pct);
+      BackIntake.spin(fwd, 50, pct);
       MiddleIntake.spin(fwd, 100, pct);
       FrontIntake.spin(fwd, 100, pct);
-      wait (15, msec);
+    }
+    else if (Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()) {
+      BackIntake.spin(reverse, 100, pct);
+      MiddleIntake.spin(reverse, 100, pct);
+      FrontIntake.spin(reverse, 100, pct);
+    }
+    else if (Controller1.ButtonR2.pressing() && Controller1.ButtonL1.pressing()) {
+      BackIntake.spin(fwd, 100, pct);
+      MiddleIntake.spin(reverse, 100, pct);
+      FrontIntake.spin(reverse, 100, pct);
     }
     //Intake fill
     else if (Controller1.ButtonR1.pressing()){
@@ -120,11 +138,11 @@ void usercontrol(void) {
     if (Controller1.ButtonRight.pressing()) {
       if (deScore == true) {
         deScore = false;
-        wait (200, msec);
+        wait (250, msec);
       }
       else if (deScore == false) {
         deScore = true;
-        wait (200, msec);
+        wait (250, msec);
       }
       DescorePiston.set(deScore);
     }

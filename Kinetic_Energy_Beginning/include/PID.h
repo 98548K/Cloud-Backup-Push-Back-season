@@ -1,6 +1,7 @@
 extern double wheelRad;
 extern const double drivetrainWidth;
 extern const double drivetrainLength;
+extern double resetCurrentPosition;
 
 void driveIn(double driveDist);
 
@@ -27,3 +28,11 @@ extern double resetCurrentPosition;
 
 extern double turnIntegralLimit;
 extern double driveIntegralLimit;
+
+void longDrive();
+
+void shortDrive();
+
+void longTurn();
+
+void shortTurn();

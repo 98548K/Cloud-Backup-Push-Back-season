@@ -307,7 +307,7 @@ void touch() {
       if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() > 50 && Brain.Screen.yPosition() < 100) {
         auton = "Skills";
         beginHeading = 327;
-        beginX = 50;
+        beginX = 40;
         beginY = 23.5;
       }
       else if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() < 150) {
@@ -367,7 +367,7 @@ void touch() {
     if (!enabledComp()) {
       if (Inertial1.isCalibrating()) {
         Inertial1.setHeading(beginHeading, deg);
-        setDrivePosition(beginX, beginY, beginHeading);
+        setDrivePosition(beginX, beginY);
       }
       else if (std::round(Inertial1.heading(deg)) != validateHeading(beginHeading) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 2) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 2)) {
         Inertial1.calibrate();

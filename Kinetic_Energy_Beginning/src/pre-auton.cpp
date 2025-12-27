@@ -4,5 +4,7 @@ void pre_auton(void) {
     vexcodeInit();
     Drivetrain.setDriveVelocity(100, pct);
     BorderControl.setLightPower(25, pct);
-    selectable();
+    runGPS1.suspend();
+    runGPS2.suspend();
+    //selectable();
   }

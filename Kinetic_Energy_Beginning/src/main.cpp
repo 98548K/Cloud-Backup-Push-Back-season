@@ -20,6 +20,7 @@
 using namespace vex;
 competition Competition;
 
+
 bool valid;
 
 bool enabledComp() {
@@ -33,7 +34,6 @@ int main() {
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
   task odomTask = task(positionTracking);
-
   pre_auton();
 
   while (true) {

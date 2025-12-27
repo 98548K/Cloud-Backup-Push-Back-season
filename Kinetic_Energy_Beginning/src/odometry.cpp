@@ -54,12 +54,16 @@ double offsetGPS1Y;
 double offsetGPS2X;
 double offsetGPS2Y;
 
+
+double GPS1RadianHeading;
+double GPS2RadianHeading;
+
 //For GPS 1:
-const double horizDist1 = -4;
+const double horizDist1 = -3;
 const double vertDist1 = 0;
 
 //For GPS 2:
-const double horizDist2 = 0;
+const double horizDist2 = +3.5;
 const double vertDist2 = 0;
 
 /*
@@ -83,6 +87,10 @@ int positionTracking() {
         radianHeading = Inertial1.heading(deg) * M_PI / 180;
         deltaRadianHeading = radianHeading - prevRadianHeading;
         averageRadianHeading = radianHeading - (deltaRadianHeading / 2);
+
+        //GPS headings in radians to make the GPS sensor completely independant:
+        GPS1RadianHeading = GPS1.heading(deg) * M_PI / 180;
+        GPS2RadianHeading = GPS2.heading(deg) * M_PI / 180;
 
 
 
@@ -124,17 +132,6 @@ int positionTracking() {
         prevSIDE_WHEEL = SIDE_WHEEL;
 
         //Robot hitbox variables. Less important but are helpful for distance calculations:
-
-        leftDriveFrontX = (X - drivetrainWidth / 2) * cos((-Inertial1.heading(deg) - 45) * (M_PI / 180));
-        leftDriveFrontY = (Y - drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
-        rightDriveFrontX = (X + drivetrainWidth / 2) * cos((-Inertial1.heading(deg) + 45) * (M_PI / 180));
-        rightDriveFrontY = (Y + drivetrainWidth / 2) * sin((-Inertial1.heading(deg) + 45) * (M_PI / 180));
-
-        leftDriveBackX = (X - drivetrainWidth / 2) * cos((-Inertial1.heading(deg) + 45) * (M_PI / 180));
-        leftDriveBackY = (Y - drivetrainWidth / 2) * sin((-Inertial1.heading(deg) + 45) * (M_PI / 180));
-        rightDriveBackX = (X + drivetrainWidth / 2) * cos((-Inertial1.heading(deg) - 45) * (M_PI / 180));
-        rightDriveBackY = (Y + drivetrainWidth / 2) * sin((-Inertial1.heading(deg) - 45) * (M_PI / 180));
-
         if (!Inertial1.isCalibrating()) {
             Controller1.Screen.setCursor(0,0);
             Controller1.Screen.print(X);
@@ -145,17 +142,22 @@ int positionTracking() {
         }
         
 
-        offsetGPS1X = (GPS1.xPosition(inches)) + horizDist1 * cos(radianHeading) - vertDist1 * sin(radianHeading);
-        offsetGPS1Y = (GPS1.yPosition(inches)) + horizDist1 * sin(radianHeading) + vertDist1 * cos(radianHeading);
+        offsetGPS1X = (GPS1.xPosition(inches)) + horizDist1 * cos(GPS1RadianHeading) - vertDist1 * sin(GPS1RadianHeading);
+        offsetGPS1Y = (GPS1.yPosition(inches)) + horizDist1 * sin(GPS1RadianHeading) + vertDist1 * cos(GPS1RadianHeading);
 
-        offsetGPS2X = (GPS2.yPosition(inches)) + horizDist2 * cos(radianHeading) + vertDist2 * sin(radianHeading);
-        offsetGPS2Y = (GPS2.yPosition(inches)) + horizDist2 * sin(radianHeading) + vertDist2 * cos(radianHeading);
+        offsetGPS2X = (GPS2.xPosition(inches)) + horizDist2 * cos(GPS2RadianHeading) - vertDist2 * sin(GPS2RadianHeading);
+        offsetGPS2Y = (GPS2.yPosition(inches)) + horizDist2 * sin(GPS2RadianHeading) + vertDist2 * cos(GPS2RadianHeading);
 
         //wait (25, msec);
         task::sleep(10);
     }
     return 0;
 }
+
+
+
+
+
 
 //Function for calculating the distance from both axies. First two parameters are where it's at, third and fourth parameters are where it needs to be.
 
@@ -168,11 +170,9 @@ double getDistance(double x1, double y1, double x2, double y2) {
 }
 
 //Sets the starting orientation of the robot:
-void setDrivePosition(double x, double y, double startHeading) {
+void setDrivePosition(double x, double y) {
     X = x;
     Y = y;
-    Inertial1.setHeading(startHeading, deg);
-    radianHeading = startHeading * M_PI / 180;
 }
 
 //Function for determining the coordinates the robot points at:

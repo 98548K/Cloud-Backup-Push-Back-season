@@ -1,4 +1,5 @@
 void curveToPosition(double desiredX, double desiredY);
+void curveToPosition(double desiredX, double desiredY, double time);
 extern double desiredHeading;
 
 extern double linearVel;

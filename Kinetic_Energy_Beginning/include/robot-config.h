@@ -21,6 +21,7 @@ extern digital_out TopIntakePiston;
 extern digital_out DescorePiston;
 extern digital_out BruteForce;
 extern digital_out Wing;
+extern digital_out trackingWheelPiston;
 
 extern digital_out No_Piston;
 extern motor No_Motor;

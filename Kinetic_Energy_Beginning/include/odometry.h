@@ -6,7 +6,7 @@ extern double radianHeading;
 extern double horizontalTrackingCenter;
 extern double verticalTrackingCenter;
 extern int positionTracking();
-void setDrivePosition(double x, double y, double startHeading);
+void setDrivePosition(double x, double y);
 void turnToPosition(double x, double y, vex::directionType dir);
 void turnToPosition(double x, double y, vex::directionType dir, double Limer);
 void driveToPosition(double x, double y, vex::directionType dir);
