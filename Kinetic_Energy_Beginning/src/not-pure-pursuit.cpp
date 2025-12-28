@@ -11,7 +11,7 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
             l += 1;
         }
         //Tolerance for ending the path
-        else if (getDistance(X, Y, pltX[l], pltY[l]) <= 6 && l == pltX.size() - 1) {
+        else if (getDistance(X, Y, pltX[l], pltY[l]) <= 3 && l == pltX.size() - 1) {
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
             break;

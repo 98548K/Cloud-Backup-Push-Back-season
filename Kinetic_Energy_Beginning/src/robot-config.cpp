@@ -26,7 +26,7 @@ motor BackIntake = motor(PORT10, ratio18_1, true);
 motor FrontIntake = motor(PORT21, ratio18_1, false);
 motor MiddleIntake = motor(PORT9, ratio18_1, true);
 digital_out BottomIntakePiston = digital_out(Brain.ThreeWirePort.F);
-digital_out TopIntakePiston = digital_out(Brain.ThreeWirePort.E);
+digital_out TopIntakePiston = digital_out(Brain.ThreeWirePort.C);
 digital_out DescorePiston = digital_out(Brain.ThreeWirePort.H);
 digital_out BruteForce = digital_out(Brain.ThreeWirePort.A);
 digital_out Wing = digital_out(Brain.ThreeWirePort.G);
@@ -116,9 +116,9 @@ void auto_run() {
   runGPS1.suspend();
   runGPS2.suspend();
   while (Inertial1.isCalibrating() ) {
-    Inertial1.setHeading(GPS2.heading(deg), deg);
-    X = offsetGPS2X;
-    Y = offsetGPS2Y;
+    Inertial1.setHeading(149, deg);
+    X = -55;
+    Y = -24;
     Controller1.Screen.setCursor(0,0);
     Controller1.Screen.print("Calibrating");
   }

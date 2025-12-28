@@ -306,9 +306,9 @@ void touch() {
       Brain.Screen.printAt(251, 235, "Other Blue");
       if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() > 50 && Brain.Screen.yPosition() < 100) {
         auton = "Skills";
-        beginHeading = 327;
-        beginX = 40;
-        beginY = 23.5;
+        beginHeading = 149;
+        beginX = -55;
+        beginY = -24;
       }
       else if (Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 480 && Brain.Screen.yPosition() < 150) {
         isCalibrated = true;

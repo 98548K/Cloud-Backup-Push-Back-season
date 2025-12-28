@@ -6,7 +6,7 @@ double kI;
 double kD;
 
 void longDrive() {
-    kP = 1.7;
+    kP = 2.0;
     kI = 0.013;
     kD = 3.2;
     driveIntegralLimit = 5.0;
@@ -50,14 +50,14 @@ void longTurn() {
 void shortTurn() {
     turnKP = 0.5;
     turnKI = 0.0;
-    turnKD = 1.3;
+    turnKD = 1.9;
 }
 
 
 double wheelRad = 1.0;//0.0
 
 double turnTolerance = 1;//0.5
-double driveTolerance = 0.25;//0.25
+double driveTolerance = 0.5;//0.25
 
 //Will continue using the integral until it's the limit away from its destination
 double driveIntegralLimit;
