@@ -66,10 +66,15 @@ const double vertDist1 = 0;
 const double horizDist2 = +3.5;
 const double vertDist2 = 0;
 
+auto robotPosition = std::make_tuple(X, Y);
+
+double sameValueAsX = std::get<0>(robotPosition);
+double sameValueAsY = std::get<1>(robotPosition);
+
 /*
 
 Fundamental odom math and updating math. Delta math formula is: delta value = value - previous value.
-This is so we can solve for the original value, then add the diference between
+This is so we can solve for the original value, then add the difference between
 where it was and where it's at using the formula.
 
 */
@@ -113,8 +118,9 @@ int positionTracking() {
             YCalculation = 2 * sin(deltaRadianHeading / 2.0) * ((deltaFRONT_WHEEL / deltaRadianHeading) + verticalTrackingCenter);
         }
 
-        deltaX = (YCalculation * sin(averageRadianHeading)) - (XCalculation * cos(averageRadianHeading));
-        deltaY = (YCalculation * cos(averageRadianHeading)) + (XCalculation * sin(averageRadianHeading));
+        //Change in position
+        deltaX = (XCalculation * cos(averageRadianHeading)) + (YCalculation * sin(averageRadianHeading));
+        deltaY = (YCalculation * cos(averageRadianHeading)) - (XCalculation * sin(averageRadianHeading));
         //
 
 
@@ -150,6 +156,7 @@ int positionTracking() {
 
         //wait (25, msec);
         task::sleep(10);
+        
     }
     return 0;
 }

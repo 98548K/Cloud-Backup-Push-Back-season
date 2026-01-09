@@ -26,13 +26,5 @@ extern double kD;
 extern double storedTrackingMeasurements;
 extern double resetCurrentPosition;
 
-extern double turnIntegralLimit;
-extern double driveIntegralLimit;
-
-void longDrive();
-
-void shortDrive();
-
-void longTurn();
-
-void shortTurn();
+void setDriveConstants(double dP, double dI, double dD);
+void setTurnConstants(double tP, double tI, double tD);

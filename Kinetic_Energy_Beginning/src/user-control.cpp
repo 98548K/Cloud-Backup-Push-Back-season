@@ -89,6 +89,8 @@ void usercontrol(void) {
       BackIntake.spin(fwd, 50, pct);
       MiddleIntake.spin(fwd, 100, pct);
       FrontIntake.spin(fwd, 100, pct);
+      wait (15, msec);
+      TopIntakePiston.set(true);
     }
     else if (Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()) {
       BackIntake.spin(reverse, 100, pct);

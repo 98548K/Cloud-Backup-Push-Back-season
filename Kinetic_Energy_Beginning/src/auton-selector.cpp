@@ -365,12 +365,14 @@ void touch() {
 
     
     if (!enabledComp()) {
-      if (Inertial1.isCalibrating()) {
+      if (Inertial1.isCalibrating() && GPS1.isCalibrating() && GPS2.isCalibrating()) {
         Inertial1.setHeading(beginHeading, deg);
         setDrivePosition(beginX, beginY);
       }
       else if (std::round(Inertial1.heading(deg)) != validateHeading(beginHeading) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 2) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 2)) {
         Inertial1.calibrate();
+        GPS1.calibrate();
+        GPS2.calibrate();
       }
     }
 

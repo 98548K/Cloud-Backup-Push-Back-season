@@ -5,34 +5,11 @@ double kP;
 double kI;
 double kD;
 
-void longDrive() {
-    kP = 2.0;
-    kI = 0.013;
-    kD = 3.2;
-    driveIntegralLimit = 5.0;
+void setDriveConstants(double dP, double dI, double dD) {
+    kP = dP;
+    kI = dI;
+    kD = dD;
 }
-
-void shortDrive() {
-    kP = 2.2;
-    kI = 0.026;
-    kD = 3.1;
-    driveIntegralLimit = 3.5;
-}
-//double kP = 1.7;
-//double kI = 0.013;
-//double kD = 3.2;
-
-//double driveTolerance = 0.5;
-
-//double turnKP = 0.39;
-//double turnKI = 0.0007;
-//double turnKD = 0.67;
-
-//double driveIntegralLimit = 5.0;
-//double turnIntegralLimit = 5.0;
-
-
-//Short distance:
 
 
 double turnKP;
@@ -40,32 +17,20 @@ double turnKI;
 double turnKD;
 
 
-void longTurn() {
-    turnKP = 0.39;
-    turnKI = 0.0007;
-    turnKD = 0.67;
-    turnIntegralLimit = 5.0;
-}
-
-void shortTurn() {
-    turnKP = 0.5;
-    turnKI = 0.0;
-    turnKD = 1.9;
+void setTurnConstants(double tP, double tI, double tD) {
+    turnKP = tP;
+    turnKI = tI;
+    turnKD = tD;
 }
 
 
 double wheelRad = 1.0;//0.0
 
-double turnTolerance = 1;//0.5
+double turnTolerance = 1.0;//0.5
 double driveTolerance = 0.5;//0.25
-
-//Will continue using the integral until it's the limit away from its destination
-double driveIntegralLimit;
-double turnIntegralLimit;
 
 const double drivetrainWidth = 13.0;//↔
 const double drivetrainLength = 15.5;//↕
-
 
 double resetCurrentPosition;
 
@@ -93,6 +58,7 @@ class PID {
         double storedHeading;
         double timing;
         double deployRange;
+        double prevPwr;
         //Declaring what instance of motor control it is:
         bool timerEnabled;
         bool isTurning;
@@ -113,38 +79,41 @@ class PID {
             integral = 0;
             error = 0;
             //This accounts for the tracking wheel measuremants in PID:
-            storedTrackingMeasurements = frontTracking.position(turns) * (wheelRad * 2) * M_PI;
+            storedTrackingMeasurements = std::abs(frontTracking.position(turns)) * (wheelRad * 2) * M_PI;
 
             storedHeading = Inertial1.heading(deg);
             while (true) {
                 //This simmulates drive PID starting at 0:
-                resetCurrentPosition = (frontTracking.position(turns) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
+                resetCurrentPosition = (std::abs(frontTracking.position(turns)) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
 
                 //This is nescessarry for odometry to work so we don't have to reset the forward/sideways tracking position.
                 //It instead starts where the tracking position is to 0 allowing it to use distance values instead of coordinate values.
 
                 //PID math:
-                integral += error;
+
+                if (integral < (desiredValue / 2)) {
+                    integral += error;
+                }
                 //
 
                 //Stops using integral in the power once the condition is met:
-                if (std::abs(error) < turnIntegralLimit && isTurning) {
-                    integral = 0;
-                } else if (std::abs(error) < driveIntegralLimit && (isDriving)) {
-                    integral = 0;
+                else if (integral > (desiredValue / 2) && integral > integral + 1) {
+                    integral -= 1;
+                }
+                else if (integral > (desiredValue / 2)) {
+                    integral = (desiredValue / 2);
                 }
 
                 //More PID math:
                 derivative = error - prevError;
-                prevError = error;
                 //
 
 
 
                 //Class initialization for turning:
                 if (isTurning && !timerEnabled) {
-                    error = constrainAngle(desiredValue - Inertial1.heading(deg));
-                    pwr = error * turnKP + integral * turnKI + derivative * turnKD;
+                    error = constrainAngle(desiredValue - std::abs(Inertial1.heading(deg)));
+                    pwr = (error * turnKP) + (integral * turnKI) + (derivative * turnKD);
                     LeftDriveSmart.spin(fwd, pwr, pct);
                     RightDriveSmart.spin(reverse, pwr, pct);
                     if (error == 0) break;
@@ -160,6 +129,7 @@ class PID {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = (error * kP) + (integral * kI) + (derivative * kD);
+
                     if (constrainAngle(storedHeading - Inertial1.heading(deg)) < 0) {
                         RightDriveSmart.spin(fwd, pwr--, pct);
                         LeftDriveSmart.spin(fwd, pwr++, pct);
@@ -175,7 +145,7 @@ class PID {
 
                 //Class initialization for turning with timer:
                 if (isTurning && timerEnabled) {
-                    error = constrainAngle(desiredValue - Inertial1.heading(deg));
+                    error = constrainAngle(desiredValue - std::abs(Inertial1.heading(deg)));
                     pwr = error * turnKP + integral * turnKI + derivative * turnKD;
                     LeftDriveSmart.spin(fwd, pwr, pct);
                     RightDriveSmart.spin(reverse, pwr, pct);
@@ -216,7 +186,10 @@ class PID {
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
 
-                wait (15, msec);
+                prevError = error;
+                prevPwr = pwr;
+
+                wait (10, msec);
             }
             LeftDriveSmart.stop(hold);
             RightDriveSmart.stop(hold);

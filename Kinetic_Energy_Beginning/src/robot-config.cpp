@@ -24,7 +24,7 @@ rotation frontTracking = rotation(PORT13, true);
 rotation sideTracking = rotation(PORT14, false);
 motor BackIntake = motor(PORT10, ratio18_1, true);
 motor FrontIntake = motor(PORT21, ratio18_1, false);
-motor MiddleIntake = motor(PORT9, ratio18_1, true);
+motor MiddleIntake = motor(PORT9, ratio18_1, false);
 digital_out BottomIntakePiston = digital_out(Brain.ThreeWirePort.F);
 digital_out TopIntakePiston = digital_out(Brain.ThreeWirePort.C);
 digital_out DescorePiston = digital_out(Brain.ThreeWirePort.H);
@@ -113,9 +113,11 @@ int rc_auto_loop_function_Controller1() {
 
 void auto_run() {
   Inertial1.calibrate();
+  GPS1.calibrate();
+  GPS2.calibrate();
   runGPS1.suspend();
   runGPS2.suspend();
-  while (Inertial1.isCalibrating() ) {
+  while (Inertial1.isCalibrating() || GPS1.isCalibrating() || GPS2.isCalibrating()) {
     Inertial1.setHeading(149, deg);
     X = -55;
     Y = -24;
@@ -131,6 +133,6 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  auto_run();
+  //auto_run();
   Controller1.Screen.clearScreen();
 }
