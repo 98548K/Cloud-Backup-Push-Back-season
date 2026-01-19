@@ -330,14 +330,11 @@ void touch() {
       beginY = startY(22, 0, 0, 0);
     }
 
-
-
-
     else if (quadrant == 2) {
       autoVector = {"Left", "Empty6", "Empty7", "Empty8"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(263, 0, 0, 0);
+      beginHeading = startHeading(243, 0, 0, 0);
       beginX = startX(55, 0, 0, 0);
       beginY = startY(-22, 0, 0, 0);
     }
@@ -346,7 +343,7 @@ void touch() {
       autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(277, 0, 0, 0);
+      beginHeading = startHeading(295, 0, 0, 0);
       beginX = startX(55, 0, 0, 0);
       beginY = startY(22, 0, 0, 0);
     }

@@ -58,21 +58,19 @@ task runGPS2 = task(readGPS2);
 void Left() {
     runGPS1.suspend();
     runGPS2.suspend();
-    //Heading: 263
+    //Heading: 243
     //X: 55
     //Y: -22
     BackIntake.stop();
-    MiddleIntake.spin(fwd, 50, pct);
+    MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    driveInWithPiston(36.7, 10);
+    driveInWithPiston(28, 11);
+    wait (0.5, sec);
     turnToHeading(135);
-    driveIn(-13.6, 1.5);
-    //Second part
-    BackIntake.stop();
-    driveIn(45);
+    driveIn(32.5);
     intakeFill();
     turnToHeading(90);
-    driveIn(15, 1.65);
+    driveIn(16, 2);
     driveIn(-34, 2);
     TopIntakePiston.set(true);
     BackIntake.spin(reverse, 100, pct);
@@ -83,21 +81,26 @@ void Left() {
     MiddleIntake.spin(reverse, 100, pct);
     wait (0.25, sec);
     MiddleIntake.spin(fwd, 100, pct);
+    wait (2, sec);
+    DescorePiston.set(false);
+    driveIn(5);
+    TopIntakePiston.set(false);
+    driveIn(-15);
 }
 
 
 void Right() {
     runGPS1.suspend();
     runGPS2.suspend();
-    //Heading: 277
+    //Heading: 295
     //X: 55
     //Y: 22
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    driveInWithPiston(38, 10);
+    driveInWithPiston(23.5, 10.25);
     wait (0.5, sec);
-    turnToHeading(230);
+    turnToHeading(218);
     DescorePiston.set(false);
     BottomIntakePiston.set(true);
     driveIn(20, 1.5);
@@ -110,18 +113,36 @@ void Right() {
     stopIntakes();
     //Second part
     turnToHeading(40);
-    driveIn(31.5);
+    driveIn(28.5);
     intakeFill();
     turnToHeading(90);
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    driveIn(20, 1.4);
+    driveIn(16, 1.4);
     driveIn(-34, 2);
     TopIntakePiston.set(true);
     MiddleIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     wait (1, sec);
+}
+
+
+void New_Right() {
+    runGPS1.suspend();
+    runGPS2.suspend();
+    //Heading: 294
+    //X: 55
+    //Y: 22
+    BackIntake.stop();
+    MiddleIntake.spin(fwd, 25, pct);
+    FrontIntake.spin(fwd, 100, pct);
+    driveIn(42);
+    turnToHeading(367);
+    MiddleIntake.stop();
+    driveIn(10, 1);
+    DescorePiston.set(true);
+    driveIn(-10);
 }
 
 void Skills() {
@@ -135,27 +156,29 @@ void Skills() {
     BackIntake.stop();
     //Deploys piston and lines up next to the matchloader
     DescorePiston.set(true);
-    driveIn(30.5);
+    driveIn(28);
     //Turns toward the matchloader
     wait (0.25, sec);
     //Drives into the matchloader
-    turnToHeading(270);
-    driveIn(17.5, 2.3);
+    turnToHeading(270, 1.5);
+    setDriveConstants(2.4, 0.01, 3.3);
+    driveIn(16.5, 2.3);
+    setDriveConstants(2.7, 0.01, 3.3);
     MiddleIntake.spin(fwd, 50, pct);
     driveIn(-6);
     FrontIntake.stop();
     MiddleIntake.stop();
-    turnToHeading(315);
-    driveIn(-17.5, 1.5);
-    turnToHeading(270);
+    turnToHeading(300);
+    driveIn(-23.5, 1.5);
+    turnToHeading(268.5);
     Wing.set(true);
-    driveIn(-80);
+    //Drive between goal and wall
+    driveIn(-75);
     turnToHeading(0);
-    driveIn(11);
+    driveIn(10);
     turnToHeading(90);
-    driveIn(-22, 1.5);
+    driveIn(-38, 2);
     TopIntakePiston.set(true);
-    Inertial1.setHeading(90, deg);
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
@@ -163,23 +186,31 @@ void Skills() {
     MiddleIntake.spin(reverse, 100, pct);
     wait (0.15, sec);
     MiddleIntake.spin(fwd, 100, pct);
-    wait (0.85, sec);
+    wait (1, sec);
     BackIntake.stop();
+    TopIntakePiston.set(false);
     BackIntake.spin(reverse, 3, pct);
-    driveIn(30, 3);
-    turnToHeading(90, 1);
+    driveIn(2);
+    turnToHeading(86);
+    setDriveConstants(2.3, 0.01, 3.3);
+    driveIn(33, 3.5);
+    setDriveConstants(2.7, 0.01, 3.3);
+    turnToHeading(86, 1);
     MiddleIntake.stop();
     BackIntake.stop();
-    driveIn(-30, 1.5);
+    TopIntakePiston.set(true);
+    driveIn(-35, 1.5);
     runGPS2.resume();
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
     wait (0.85, sec);
     MiddleIntake.spin(reverse, 100, pct);
+    BackIntake.spin(reverse, 100, pct);
     wait (0.15, sec);
     MiddleIntake.spin(fwd, 100, pct);
-    wait (0.85, sec);
+    BackIntake.spin(reverse, 100, pct);
+    wait (1, sec);
     BackIntake.stop();
     runGPS2.suspend();
     DescorePiston.set(false);
@@ -188,26 +219,28 @@ void Skills() {
     TopIntakePiston.set(true);
     //
     BackIntake.stop();
-    driveIn(15);
-    turnToHeading(0);
-    driveIn(92);
+    driveIn(13);
+    turnToHeading(2.5);
+    driveIn(90);
     turnToHeading(90);
     FrontIntake.spin(fwd, 100, pct);
     DescorePiston.set(true);
+    setDriveConstants(2.3, 0.01, 3.3);
     driveIn(24, 3);
+    setDriveConstants(2.7, 0.01, 3.3);
     MiddleIntake.spin(fwd, 100, pct);
     driveIn(-6);
     FrontIntake.stop();
     MiddleIntake.stop();
-    turnToHeading(135);
-    driveIn(-20, 1.5);
+    turnToHeading(120);
+    driveIn(-23, 1.5);
     turnToHeading(90);
     Wing.set(true);
     driveIn(-80);
     turnToHeading(180);
-    driveIn(11);
+    driveIn(9.5);
     turnToHeading(270);
-    driveIn(-22, 1.5);
+    driveIn(-28, 1.5);
     TopIntakePiston.set(true);
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
@@ -219,8 +252,9 @@ void Skills() {
     wait (0.85, sec);
     BackIntake.stop();
     BackIntake.spin(reverse, 3, pct);
+    turnToHeading(266);
     driveIn(34, 3);
-    turnToHeading(270, 1);
+    turnToHeading(266, 1);
     MiddleIntake.stop();
     BackIntake.stop();
     driveIn(-30, 1.5);
@@ -248,6 +282,7 @@ void Skills() {
 }
 
 void Bad_Skills() {
+    trackingWheelPiston.set(true);
     FrontIntake.spin(reverse, 100, pct);
     Drivetrain.driveFor(39, inches);
 }

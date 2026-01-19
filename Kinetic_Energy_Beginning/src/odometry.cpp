@@ -140,10 +140,13 @@ int positionTracking() {
         //Robot hitbox variables. Less important but are helpful for distance calculations:
         if (!Inertial1.isCalibrating()) {
             Controller1.Screen.setCursor(0,0);
-            Controller1.Screen.print(X);
+            Controller1.Screen.print("Rotations: ");
+            Controller1.Screen.print(frontTracking.position(turns));
             Controller1.Screen.setCursor(2,0);
-            Controller1.Screen.print(Y);
+            Controller1.Screen.print("Inches: ");
+            Controller1.Screen.print(resetCurrentPosition);
             Controller1.Screen.setCursor(3,0);
+            Controller1.Screen.print("Evil Value: ");
             Controller1.Screen.print(Inertial1.heading(deg));
         }
         

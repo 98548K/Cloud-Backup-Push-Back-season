@@ -8,6 +8,8 @@ void Left();
 
 void Right();
 
+void New_Right();
+
 void Skills();
 
 void Bad_Skills();

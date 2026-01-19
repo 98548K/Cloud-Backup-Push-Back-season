@@ -47,7 +47,7 @@ void intakeLong() {
 }
 
 void intakeMedium() {
-  BackIntake.spin(fwd, 100, pct);
+  BackIntake.spin(fwd, 90, pct);
   MiddleIntake.stop();
   FrontIntake.stop();
   wait (15, msec);
@@ -61,6 +61,20 @@ void stopIntakes() {
   FrontIntake.stop();
 }
 
+
+//Pistons:
+void setWing() {
+  if (wingIt == true) {
+    wingIt = false;
+  }
+  else if (wingIt == false) {
+    wingIt = true;
+  }
+  Wing.set(wingIt);
+}
+
+
+
 void usercontrol(void) {
     Drivetrain.setStopping(coast); 
     Drivetrain.setDriveVelocity(100, pct);
@@ -70,6 +84,7 @@ void usercontrol(void) {
     MiddleIntake.setVelocity(100, pct);
     BackIntake.setVelocity(100, pct);
     trackingWheelPiston.set(true);
+    
 
 
 
@@ -86,7 +101,7 @@ void usercontrol(void) {
       TopIntakePiston.set(true);
     }
     else if (Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
-      BackIntake.spin(fwd, 50, pct);
+      BackIntake.spin(fwd, 40, pct);
       MiddleIntake.spin(fwd, 100, pct);
       FrontIntake.spin(fwd, 100, pct);
       wait (15, msec);
@@ -98,7 +113,7 @@ void usercontrol(void) {
       FrontIntake.spin(reverse, 100, pct);
     }
     else if (Controller1.ButtonR2.pressing() && Controller1.ButtonL1.pressing()) {
-      BackIntake.spin(fwd, 100, pct);
+      BackIntake.spin(fwd, 90, pct);
       MiddleIntake.spin(reverse, 100, pct);
       FrontIntake.spin(reverse, 100, pct);
     }
@@ -161,6 +176,9 @@ void usercontrol(void) {
       Wing.set(wingIt);
     }
     
+
+
+
     //Color sort toggle code:
     if (Controller1.ButtonB.pressing()) {
         if (colorSortColor == "Off ") {
