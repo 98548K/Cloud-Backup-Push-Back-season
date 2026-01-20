@@ -25,12 +25,12 @@ void curvature(double lX, double lY) {
 
 
         if (validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) > 90 && validateHeading(((atan2(lX - X, lY - Y) * (180 / M_PI)) - Inertial1.heading(deg))) < 270) {
-            linearVel = -50;
+            linearVel = -60;
             //Standard P controller.
             turnVel = (constrainAngle((desiredHeading - Inertial1.heading(deg)) + 180) * turnCurveP);
         }
         else {
-            linearVel = 50;
+            linearVel = 60;
             //Standard P controller.
             turnVel = (constrainAngle(desiredHeading - Inertial1.heading(deg)) * turnCurveP);
         }
@@ -51,7 +51,7 @@ void curveToPosition(double desiredX, double desiredY) {
     while (true) {
         curvature(desiredX, desiredY);
         //If both values are within their certain tolerance, the function will terminate:
-        if (getDistance(X, Y, desiredX, desiredY) <= 6) {
+        if (getDistance(X, Y, desiredX, desiredY) <= 4) {
             LeftDriveSmart.stop(brake);
             RightDriveSmart.stop(brake);
             break;

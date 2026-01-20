@@ -3,7 +3,7 @@
 
 void autonomous(void) {
     setDriveConstants(2.7, 0.01, 3.3);
-    setTurnConstants(0.4, 0.01, 0.79);
+    setTurnConstants(0.4085, 0.01, 0.79);
     if (auton == "Skills") {
         Skills();
     }
@@ -62,10 +62,12 @@ void autonomous(void) {
         
     }
     else {
-        Inertial1.setHeading(243, deg);
-        wait (3, sec);
+        //Inertial1.setHeading(149, deg);
+        //setDrivePosition(-55, -24);
+        //wait (3, sec);
+        Skills();
         //Right();
-        Left();
+        //Left();
         //New_Right();
         //driveIn(-80);
         //Skills();

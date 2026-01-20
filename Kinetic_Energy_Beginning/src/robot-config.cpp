@@ -133,6 +133,6 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  //auto_run();
+  auto_run();
   Controller1.Screen.clearScreen();
 }

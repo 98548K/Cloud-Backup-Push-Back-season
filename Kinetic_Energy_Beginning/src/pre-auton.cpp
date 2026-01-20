@@ -6,5 +6,5 @@ void pre_auton(void) {
     BorderControl.setLightPower(25, pct);
     runGPS1.suspend();
     runGPS2.suspend();
-    selectable();
+    //selectable();
   }
