@@ -35,6 +35,7 @@ digital_out trackingWheelPiston = digital_out(Brain.ThreeWirePort.D);
 optical BorderControl = optical(PORT22);
 gps GPS1 = gps(PORT2, 87);
 gps GPS2 = gps(PORT6, 270);
+PID chassis = PID(kP, kI, kD, turnKP, turnKI, turnKD);
 
 
 
@@ -133,6 +134,6 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  auto_run();
+  //auto_run();
   Controller1.Screen.clearScreen();
 }

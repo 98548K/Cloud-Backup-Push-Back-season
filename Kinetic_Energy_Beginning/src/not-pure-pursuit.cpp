@@ -6,7 +6,7 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY) {
     int l = 0;
     while (true) {
         //Buttload of tolerance to allow for fluid movement.
-        double hugeTolerance = (drivetrainLength / 2) + 6;
+        double hugeTolerance = 12;
         if (getDistance(X, Y, pltX[l], pltY[l]) <= hugeTolerance && l < pltX.size() - 1) {
             l += 1;
         }
@@ -35,7 +35,7 @@ void tracePath(std::vector<double> pltX, std::vector<double> pltY, double newTim
     Brain.resetTimer();
     while (true) {
         //Buttload of tolerance to allow for fluid movement.
-        double hugeTolerance = (drivetrainLength / 2) + 6;
+        double hugeTolerance = 18;
         if (getDistance(X, Y, pltX[l], pltY[l]) <= hugeTolerance && l < pltX.size() - 1) {
             l += 1;
         }

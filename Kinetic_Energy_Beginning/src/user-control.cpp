@@ -9,13 +9,20 @@ using namespace std;
 using signature = vision::signature;
 using code = vision::code;
 
+//Used for some weird controls that josh likes for some reason
 bool toggleIntakePiston;
-bool deScore;
-bool wingIt;
-bool Xpressed;
 
+//Counters for toggling
+int wingCounter = 0;
+int descoreCounter = 0;
+int intakePistonCounter = 0;
+int speedCounter = 0;
+
+//Drivetrain speed is divisible by half
 double half = 1;
 
+
+//Motor controls
 void intakeFill() {
   TopIntakePiston.set(false);
   BackIntake.stop();
@@ -61,19 +68,57 @@ void stopIntakes() {
   FrontIntake.stop();
 }
 
-
-//Pistons:
+//Button toggle callbacks
 void setWing() {
-  if (wingIt == true) {
-    wingIt = false;
-  }
-  else if (wingIt == false) {
-    wingIt = true;
-  }
-  Wing.set(wingIt);
+  wingCounter += 1;
+  Wing.set(wingCounter % 2 != 0);
 }
 
+void setDescore() {
+  descoreCounter += 1;
+  DescorePiston.set(descoreCounter % 2 != 0);
+}
 
+void setIntakePiston() {
+  intakePistonCounter += 1;
+  BottomIntakePiston.set(intakePistonCounter % 2 != 0);
+}
+
+void setSpeed() {
+  speedCounter += 1;
+  if (speedCounter % 2 != 0) {
+    half = 1;
+  }
+  else if (speedCounter % 2 == 0) {
+    half = 4.5;
+  }
+}
+
+void setColor() {
+  if (colorSortColor == "Off ") {
+    colorSortColor = "Red ";
+    colorSortingBlue.suspend();
+    colorSortingRed.resume();
+  }
+  else if (colorSortColor == "Red ") {
+    colorSortColor = "Blue";
+    colorSortingBlue.resume();
+    colorSortingRed.suspend();
+  }
+  else if (colorSortColor == "Blue") {
+    colorSortColor = "Off ";
+    colorSortingBlue.suspend();
+    colorSortingRed.suspend();
+  }
+  else {
+    colorSortColor = "Off ";
+  }
+
+    
+
+  Controller1.Screen.setCursor(3, 1);
+  Controller1.Screen.print(colorSortColor);
+}
 
 void usercontrol(void) {
     Drivetrain.setStopping(coast); 
@@ -84,7 +129,12 @@ void usercontrol(void) {
     MiddleIntake.setVelocity(100, pct);
     BackIntake.setVelocity(100, pct);
     trackingWheelPiston.set(true);
-    
+    //Button toggles
+    Controller1.ButtonY.pressed(setWing);
+    Controller1.ButtonRight.pressed(setDescore);
+    Controller1.ButtonDown.pressed(setIntakePiston);
+    Controller1.ButtonX.pressed(setSpeed);
+    Controller1.ButtonB.pressed(setColor);
 
 
 
@@ -139,88 +189,11 @@ void usercontrol(void) {
     }
 
 
-    if (Controller1.ButtonDown.pressing()) {
-      if (toggleIntakePiston == true) {
-        toggleIntakePiston = false;
-        wait (200, msec);
-      }
-      else if (toggleIntakePiston == false) {
-        toggleIntakePiston = true;
-        wait (200, msec);
-      }
-      BottomIntakePiston.set(toggleIntakePiston);
+      //Color sort toggle code:
+      if (Controller1.ButtonB.pressing()) {
+        
     }
 
-
-    if (Controller1.ButtonRight.pressing()) {
-      if (deScore == true) {
-        deScore = false;
-        wait (250, msec);
-      }
-      else if (deScore == false) {
-        deScore = true;
-        wait (250, msec);
-      }
-      DescorePiston.set(deScore);
-    }
-
-    if (Controller1.ButtonY.pressing()) {
-      if (wingIt == true) {
-        wingIt = false;
-        wait (200, msec);
-      }
-      else if (wingIt == false) {
-        wingIt = true;
-        wait (200, msec);
-      }
-      Wing.set(wingIt);
-    }
-    
-
-
-
-    //Color sort toggle code:
-    if (Controller1.ButtonB.pressing()) {
-        if (colorSortColor == "Off ") {
-            colorSortColor = "Red ";
-            colorSortingBlue.suspend();
-            colorSortingRed.resume();
-            wait (.22, sec);
-        }
-        else if (colorSortColor == "Red ") {
-            colorSortColor = "Blue";
-            colorSortingBlue.resume();
-            colorSortingRed.suspend();
-            wait (.22, sec);
-        }
-        else if (colorSortColor == "Blue") {
-            colorSortColor = "Off ";
-            colorSortingBlue.suspend();
-            colorSortingRed.suspend();
-            wait (.22, sec);
-        }
-        else {
-            colorSortColor = "Off ";
-        }
-
-    
-
-    Controller1.Screen.setCursor(3, 1);
-    Controller1.Screen.print(colorSortColor);
+    task::sleep(10);
   }
-
-  if (Controller1.ButtonX.pressing()) {
-      if (Xpressed == true) {
-        Xpressed = false;
-        half = 1;
-        wait (200, msec);
-      }
-      else if (Xpressed == false) {
-        Xpressed = true;
-        half = 4.5;
-        wait (200, msec);
-      }
-    }
-
-}
 }

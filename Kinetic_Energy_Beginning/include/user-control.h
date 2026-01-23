@@ -11,3 +11,5 @@ void intakeMedium();
 void stopIntakes();
 
 extern double half;
+
+extern int wingCounter;

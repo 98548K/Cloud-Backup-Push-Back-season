@@ -1,30 +1,37 @@
+#pragma once
+
 extern double wheelRad;
-extern const double drivetrainWidth;
-extern const double drivetrainLength;
+
 extern double resetCurrentPosition;
-
-void driveIn(double driveDist);
-
-void turnToHeading(double turnHeading);
-
-void driveIn(double driveDist, double drivePeriod);
-
-void turnToHeading(double turnHeading, double turnPeriod);
-
-void driveInWithPiston(double driveDist, double DeployRange);
-
 extern double constrainAngle(double x);
+
+
+//Tuning constants:
+extern double kP;
+extern double kI;
+extern double kD;
 
 extern double turnKP;
 extern double turnKI;
 extern double turnKD;
 
-extern double kP;
-extern double kI;
-extern double kD;
+void printAtTop(double value);
 
-extern double storedTrackingMeasurements;
-extern double resetCurrentPosition;
+class PID {
+    private:
+    double p;
+    double i;
+    double d;
+    double turnP;
+    double turnI;
+    double turnD;
 
-void setDriveConstants(double dP, double dI, double dD);
-void setTurnConstants(double tP, double tI, double tD);
+    public:
+
+    PID(double P, double I, double D, double TurnP, double TurnI, double TurnD);
+    void turnToHeading(double desiredValue);
+    void drive(double desiredValue);
+    void turnToHeading(double desiredValue, double timePeriod);
+    void drive(double desiredValue, double timePeriod);
+    void driveWithPiston(double desiredValue, double deployRange);
+};

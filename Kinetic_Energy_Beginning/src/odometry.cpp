@@ -1,5 +1,6 @@
 #include "vex.h"
 
+
 using namespace std;
 
 //Tuning constants. Depending on the tracking wheel mounting we will probably need to change the operators.
@@ -139,7 +140,7 @@ int positionTracking() {
 
         //Robot hitbox variables. Less important but are helpful for distance calculations:
         if (!Inertial1.isCalibrating()) {
-            Controller1.Screen.setCursor(0,0);
+            /*Controller1.Screen.setCursor(0,0);
             Controller1.Screen.print("X: ");
             Controller1.Screen.print(X);
             Controller1.Screen.setCursor(2,0);
@@ -147,7 +148,7 @@ int positionTracking() {
             Controller1.Screen.print(Y);
             Controller1.Screen.setCursor(3,0);
             Controller1.Screen.print("Evil Value: ");
-            Controller1.Screen.print(Inertial1.heading(deg));
+            Controller1.Screen.print(Inertial1.heading(deg));*/
         }
         
 
@@ -190,20 +191,20 @@ void setDrivePosition(double x, double y) {
 void turnToPosition(double x, double y, vex::directionType dir) {
     //Uses atan2 to create the value that will multiply by radians formula to convert the heading to pointing toward certain coordinates:
     if (dir == fwd) {
-        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI));
+        chassis.turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI));
     } else if (dir == reverse) {
         //This adds 180 to the desired orientation so that it is 180 degrees around the coordinates it should be pointing at:
-        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180);
+        chassis.turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180);
     }
 }
 
 void turnToPosition(double x, double y, vex::directionType dir, double Limer) {
     //Uses atan2 to create the value that will multiply by radians formula to convert the heading to pointing toward certain coordinates:
     if (dir == fwd) {
-        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI), Limer);
+        chassis.turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI), Limer);
     } else if (dir == reverse) {
         //This adds 180 to the desired orientation so that it is 180 degrees around the coordinates it should be pointing at:
-        turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180, Limer);
+        chassis.turnToHeading((atan2(x - X, y - Y)) * (180 / M_PI) + 180, Limer);
     }
 }
 
@@ -211,10 +212,10 @@ void turnToPosition(double x, double y, vex::directionType dir, double Limer) {
 void driveToPosition(double x, double y, vex::directionType dir) {
     turnToPosition(x, y, dir);
     if (dir == fwd) {
-        driveIn(getDistance(X, Y, x, y));
+        chassis.drive(getDistance(X, Y, x, y));
     }
     if (dir == reverse) {
-        driveIn(-getDistance(X, Y, x, y));
+        chassis.drive(-getDistance(X, Y, x, y));
     }
 }
 
@@ -222,9 +223,9 @@ void driveToPosition(double x, double y, vex::directionType dir) {
 void driveToPosition(double x, double y, vex::directionType dir, double Limer) {
     turnToPosition(x, y, dir);
     if (dir == fwd) {
-        driveIn(getDistance(X, Y, x, y), Limer);
+        chassis.drive(getDistance(X, Y, x, y), Limer);
     }
     if (dir == reverse) {
-        driveIn(-getDistance(X, Y, x, y), Limer);
+        chassis.drive(-getDistance(X, Y, x, y), Limer);
     }
 }

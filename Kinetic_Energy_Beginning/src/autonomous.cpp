@@ -1,9 +1,6 @@
 #include "vex.h"
 
-
 void autonomous(void) {
-    setDriveConstants(2.7, 0.01, 3.3);
-    setTurnConstants(0.4085, 0.01, 0.79);
     if (auton == "Skills") {
         Skills();
     }
@@ -62,10 +59,15 @@ void autonomous(void) {
         
     }
     else {
-        //Inertial1.setHeading(149, deg);
+        //Wing.set(true);
+        Inertial1.setHeading(149, deg);
+        LeftDriveSmart.setPosition(0, deg);
+        RightDriveSmart.setPosition(0, deg);
         //setDrivePosition(-55, -24);
-        //wait (3, sec);
-        Skills();
+        wait (3, sec);
+        chassis.drive(96);
+        //Drivetrain.stop(coast);
+        //Skills();
         //Right();
         //Left();
         //New_Right();

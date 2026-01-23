@@ -1,3 +1,5 @@
+#pragma once
+
 using namespace vex;
 
 extern brain Brain;
@@ -10,6 +12,15 @@ extern inertial Inertial1;
 //If necessary add these in:
 extern motor_group LeftDriveSmart;
 extern motor_group RightDriveSmart;
+
+
+extern motor LF;
+extern motor LM;
+extern motor LB;
+extern motor RF;
+extern motor RM;
+extern motor RB;
+
 
 extern motor BackIntake;
 extern motor FrontIntake;
@@ -29,6 +40,7 @@ extern motor No_Motor;
 extern optical BorderControl;
 extern gps GPS1;
 extern gps GPS2;
+extern PID chassis;
 
 extern bool RemoteControlCodeEnabled;
 
