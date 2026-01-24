@@ -13,10 +13,10 @@ using code = vision::code;
 bool toggleIntakePiston;
 
 //Counters for toggling
-int wingCounter = 0;
-int descoreCounter = 0;
-int intakePistonCounter = 0;
-int speedCounter = 0;
+bool wingBool = false;
+bool descoreBool = false;
+bool intakePistonBool = false;
+bool speedBool = false;
 
 //Drivetrain speed is divisible by half
 double half = 1;
@@ -70,26 +70,26 @@ void stopIntakes() {
 
 //Button toggle callbacks
 void setWing() {
-  wingCounter += 1;
-  Wing.set(wingCounter % 2 != 0);
+  wingBool = !wingBool;
+  Wing.set(wingBool);
 }
 
 void setDescore() {
-  descoreCounter += 1;
-  DescorePiston.set(descoreCounter % 2 != 0);
+  descoreBool = !descoreBool;
+  DescorePiston.set(descoreBool);
 }
 
 void setIntakePiston() {
-  intakePistonCounter += 1;
-  BottomIntakePiston.set(intakePistonCounter % 2 != 0);
+  intakePistonBool = !intakePistonBool;
+  BottomIntakePiston.set(intakePistonBool);
 }
 
 void setSpeed() {
-  speedCounter += 1;
-  if (speedCounter % 2 != 0) {
+  speedBool = !speedBool;
+  if (speedBool == false) {
     half = 1;
   }
-  else if (speedCounter % 2 == 0) {
+  else if (speedBool == true) {
     half = 4.5;
   }
 }

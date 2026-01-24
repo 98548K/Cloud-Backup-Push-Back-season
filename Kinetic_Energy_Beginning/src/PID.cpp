@@ -10,6 +10,8 @@ double derivative;
 double prevError;
 double pwr;
 double prevPwr;
+double dt;
+double prevTime;
 double storedTrackingMeasurements;
 double resetCurrentPosition;
 double storedHeading;
@@ -18,10 +20,12 @@ double wheelRad = 1.0;//0.0
 
 double integralCap = 30;
 
+double output;
+
 //Tuning constants:
-double kP = 2.7;
-double kI;
-double kD = 3.0;
+double kP = 2.3;//4.2
+double kI = 0.0;//0.3
+double kD = 3.8;//0.33
 
 double turnKP = 0.4;
 double turnKI;
@@ -43,7 +47,7 @@ const char* turnID = "Turn";
 double returnSpeed;
 
 
-double slewLimit = 10;
+double slewLimit = 20;
 
 int PosNeg;
 int sgn(double value) {
@@ -73,10 +77,10 @@ void printAtTop(const char * value) {
 //If the delta speed is greater than the slew rate, the speed will be set to the previous speed plus slew rate cap:
 double slewRate(double output, double prevOutput, double error, double desiredValue) {
     //Slew rate is slewLimit% velocity
-    if (output > prevOutput + slewLimit && std::round(error) == desiredValue) {
+    if (output > prevOutput + slewLimit/* && std::round(error) == desiredValue*/) {
         returnSpeed = prevOutput + (slewLimit);
     }
-    else if (output < prevOutput - slewLimit && std::round(error) == desiredValue) {
+    else if (output < prevOutput - slewLimit/* && std::round(error) == desiredValue*/) {
         returnSpeed = prevOutput - (slewLimit);
     }
     else {
@@ -94,11 +98,14 @@ double constrainAngle(double x) {
 }
 
 void orderID(double IConstant) {
-    derivative = error - prevError;
-    integral += error;
+    dt = Brain.timer(sec) - prevTime;
+
+    derivative = (error - prevError) / dt;
+    integral += error * dt;
     if (std::abs(integral * IConstant) > integralCap) {
         integral = integralCap / IConstant * sgn(error);
     }
+    prevTime = dt;
 }
 
 //Function that returns the output value:
@@ -144,10 +151,12 @@ PID::PID(double P, double I, double D, double TurnP, double TurnI, double TurnD)
 void PID::turnToHeading(double desiredValue) {
     //Turn PID loop with proper fwd/rev directional math and drivetrain motor control:
     while (true) {
-        LeftDriveSmart.spin(fwd, PID_math(desiredValue, turnID, turnP, turnI, turnD), pct);
-        RightDriveSmart.spin(reverse, PID_math(desiredValue, turnID, turnP, turnI, turnD), pct);
+        output = PID_math(desiredValue, turnID, turnP, turnI, turnD);
+        LeftDriveSmart.spin(fwd, output, pct);
+        RightDriveSmart.spin(reverse, output, pct);
         if (error == 0) break;
         if (error >= -turnTolerance && error <= turnTolerance) break;
+        prevPwr = output;
         wait (10, msec);
     }
     LeftDriveSmart.stop(hold);
@@ -158,17 +167,20 @@ void PID::turnToHeading(double desiredValue) {
 void PID::drive(double desiredValue) {
     storedTrackingMeasurements = (frontTracking.position(turns)) * (wheelRad * 2) * M_PI;
     storedHeading = Inertial1.heading(deg);
+    startTimer = Brain.timer(sec);
+    Brain.resetTimer();
     while (true) {
         resetCurrentPosition = ((frontTracking.position(turns)) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
-        LeftDriveSmart.spin(fwd, PID_math(desiredValue, driveID, p, i, d) + constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
-        RightDriveSmart.spin(fwd, PID_math(desiredValue, driveID, p, i, d)  - constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
-        if (error == 0) break;
+        output = PID_math(desiredValue, driveID, p, i, d);
+        LeftDriveSmart.spin(fwd, output + constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
+        RightDriveSmart.spin(fwd, output - constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
         if (error >= -driveTolerance && error <= driveTolerance) break;
-        printAtTop(error);
+        prevPwr = output;
         wait (10, msec);
     }
     LeftDriveSmart.stop(hold);
     RightDriveSmart.stop(hold);
+    Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }
 
 //Turn PID with timer:
@@ -177,9 +189,11 @@ void PID::turnToHeading(double desiredValue, double timePeriod) {
     startTimer = Brain.timer(sec);
     Brain.resetTimer();
     while (true) {
-        LeftDriveSmart.spin(fwd, PID_math(desiredValue, turnID, turnP, turnI, turnD), pct);
-        RightDriveSmart.spin(reverse, PID_math(desiredValue, turnID, turnP, turnI, turnD), pct);
+        output = PID_math(desiredValue, turnID, turnP, turnI, turnD);
+        LeftDriveSmart.spin(fwd, output, pct);
+        RightDriveSmart.spin(reverse, output, pct);
         if (Brain.timer(sec) <= timePeriod + 0.1 && Brain.timer(sec) >= timePeriod - 0.1) break;
+        prevPwr = output;
         wait (10, msec);
     }
     LeftDriveSmart.stop(hold);
@@ -195,9 +209,11 @@ void PID::drive(double desiredValue, double timePeriod) {
     Brain.resetTimer();
     while (true) {
         resetCurrentPosition = ((frontTracking.position(turns)) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
-        RightDriveSmart.spin(fwd, PID_math(desiredValue, driveID, p, i, d)  - constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5, pct);
-        LeftDriveSmart.spin(fwd, PID_math(desiredValue, driveID, p, i, d) + constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5, pct);
+        output = PID_math(desiredValue, driveID, p, i, d);
+        LeftDriveSmart.spin(fwd, output + constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
+        RightDriveSmart.spin(fwd, output - constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.1, pct);
         if (Brain.timer(sec) <= timePeriod + 0.1 && Brain.timer(sec) >= timePeriod - 0.1) break;
+        prevPwr = output;
         wait (10, msec);
     }
     LeftDriveSmart.stop(hold);
@@ -217,6 +233,7 @@ void PID::driveWithPiston(double desiredValue, double deployRange) {
         if (error <= deployRange) DescorePiston.set(true);
         if (error >= -driveTolerance && error <= driveTolerance) break;
         printAtTop(frontTracking.position(turns));
+        prevPwr = output;
         wait (10, msec);
     }
     LeftDriveSmart.stop(hold);

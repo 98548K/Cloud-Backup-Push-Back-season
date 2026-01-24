@@ -65,7 +65,8 @@ void autonomous(void) {
         RightDriveSmart.setPosition(0, deg);
         //setDrivePosition(-55, -24);
         wait (3, sec);
-        chassis.drive(96);
+        chassis.drive(24);
+        Brain.programStop();
         //Drivetrain.stop(coast);
         //Skills();
         //Right();
