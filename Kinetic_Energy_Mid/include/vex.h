@@ -1,0 +1,40 @@
+#pragma once
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <list>
+#include <cmath>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <tuple>
+#include <numeric>
+
+#include "v5.h"
+#include "v5_vcs.h"
+
+#include "auton-selector.h"
+#include "autonomous.h"
+#include "autons.h"
+#include "odometry.h"
+#include "other-functions.h"
+#include "PID.h"
+#include "pre-auton.h"
+#include "pure-pursuit.h"
+#include "robot-config.h"
+#include "user-control.h"
+#include "curvature.h"
+#include "not-pure-pursuit.h"
+#include "main.h"
+#include "auton-initialization.h"
+
+
+#define waitUntil(condition)                                                   \
+  do {                                                                         \
+    wait(5, msec);                                                             \
+  } while (!(condition))
+
+#define repeat(iterations)                                                     \
+  for (int iterator = 0; iterator < iterations; iterator++)
