@@ -140,15 +140,22 @@ int positionTracking() {
 
         //Robot hitbox variables. Less important but are helpful for distance calculations:
         if (!Inertial1.isCalibrating()) {
-            /*Controller1.Screen.setCursor(0,0);
-            Controller1.Screen.print("X: ");
-            Controller1.Screen.print(X);
+            Controller1.Screen.setCursor(0,0);
+            Controller1.Screen.print("Front: ");
+            Controller1.Screen.print(std::round(LF.temperature(pct)));
+            Controller1.Screen.print(" ");
+            Controller1.Screen.print(std::round(RF.temperature(pct)));
             Controller1.Screen.setCursor(2,0);
-            Controller1.Screen.print("Y: ");
-            Controller1.Screen.print(Y);
+            Controller1.Screen.print("Middle: ");
+            Controller1.Screen.print(std::round(LM.temperature(pct)));
+            Controller1.Screen.print(" ");
+            Controller1.Screen.print(std::round(RM.temperature(pct)));
             Controller1.Screen.setCursor(3,0);
-            Controller1.Screen.print("Evil Value: ");
-            Controller1.Screen.print(Inertial1.heading(deg));*/
+            Controller1.Screen.print("Back: ");
+            Controller1.Screen.print(std::round(LB.temperature(pct)));
+            Controller1.Screen.print(" ");
+            Controller1.Screen.print(std::round(RB.temperature(pct)));
+            std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
         }
         
 

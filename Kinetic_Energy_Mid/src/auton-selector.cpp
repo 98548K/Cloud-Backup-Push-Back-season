@@ -334,11 +334,10 @@ void touch() {
       autoVector = {"Left", "Empty6", "Empty7", "Empty8"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(263, 0, 0, 0);
-      beginX = startX(55, 0, 0, 0);
-      beginY = startY(-22, 0, 0, 0);
+      beginHeading = startHeading(243, 0, 0, 0);
+      beginX = startX(48, 0, 0, 0);
+      beginY = startY(-6, 0, 0, 0);
     }
-     
     else if (quadrant == 3) {
       autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
@@ -347,29 +346,24 @@ void touch() {
       beginX = startX(48, 0, 0, 0);
       beginY = startY(6, 0, 0, 0);
     }
-
-
-
-
     else if (quadrant == 4) {
       autoVector = {"Left", "Empty14", "Empty15", "Empty16"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(263, 0, 0, 0);
-      beginX = startX(55, 0, 0, 0);
-      beginY = startY(-22, 0, 0, 0);
+      beginHeading = startHeading(243, 0, 0, 0);
+      beginX = startX(48, 0, 0, 0);
+      beginY = startY(-6, 0, 0, 0);
     }
 
     
     if (!enabledComp()) {
-      if (Inertial1.isCalibrating() && GPS1.isCalibrating() && GPS2.isCalibrating()) {
+      if (Inertial1.isCalibrating()) {
         Inertial1.setHeading(beginHeading, deg);
         setDrivePosition(beginX, beginY);
       }
       else if (std::round(Inertial1.heading(deg)) != validateHeading(beginHeading) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 1) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading - 2) && std::round(Inertial1.heading(deg)) != validateHeading(beginHeading + 2)) {
         Inertial1.calibrate();
-        GPS1.calibrate();
-        GPS2.calibrate();
+        setDrivePosition(999, 999);
       }
     }
 

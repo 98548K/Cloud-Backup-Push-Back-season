@@ -10,4 +10,4 @@ extern double turnCurveP;
 extern double Ll;
 extern double Lr;
 
-extern double validateHeading(double newHeading);
+extern double validateHeading(double bestHeading);

@@ -87,6 +87,7 @@ class PID {
         double integral;
         double derivative;
         double pwr;
+        double turnPwr;
         double prevError;
         double storedTrackingMeasurements;
         double storedHeading;
@@ -161,9 +162,10 @@ class PID {
                 else if (isDriving && !timerEnabled) {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
-                    pwr = (error * kP) + (derivative * kD);
-                    RightDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) - constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5), pct);
-                    LeftDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) + constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5), pct);
+                    pwr = (error * kP) + (integral * kI) + (derivative * kD);
+                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * .6;
+                    RightDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) - turnPwr), pct);
+                    LeftDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) + turnPwr), pct);
                     if (error == 0) break;
                     if (error >= -driveTolerance && error <= driveTolerance) break;
                 }
@@ -189,7 +191,18 @@ class PID {
                     if (Brain.timer(sec) <= timing + 0.1 && Brain.timer(sec) >= timing - 0.1) break;
                 }
 
-                else if (isDriving && deployRange < desiredValue) {
+                else if (isDriving && deployRange < desiredValue && !timerEnabled) {
+                    //This section is just drive PID:
+                    error = desiredValue - resetCurrentPosition;
+                    pwr = error * kP + integral * kI + derivative * kD;
+                    RightDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue), pct);
+                    LeftDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue), pct);
+                    if (error == 0) break;
+                    if (error <= deployRange) DescorePiston.set(true);
+                    if (error >= -driveTolerance && error <= driveTolerance) break;
+                }
+
+                else if (isDriving && deployRange < desiredValue && timerEnabled) {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = error * kP + integral * kI + derivative * kD;
@@ -245,4 +258,12 @@ void turnToHeading(double turnHeading, double turnPeriod) {
 void driveInWithPiston(double driveDist, double DeployRange) {
     PID drivePID(driveDist, true, false, false, 0, DeployRange);
     drivePID.run();
+}
+
+void driveInWithPiston(double driveDist, double DeployRange, double pissPeriod) {
+    startTimer = Brain.timer(sec);
+    Brain.resetTimer();
+    PID drivePID(driveDist, true, false, false, startTimer, DeployRange);
+    drivePID.run();
+    Brain.setTimer(Brain.timer(sec) + startTimer, sec);
 }

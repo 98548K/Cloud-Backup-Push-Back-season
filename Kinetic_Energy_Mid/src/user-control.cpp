@@ -87,12 +87,12 @@ void setIntakePiston() {
 }
 
 void runAuton() {
-  Inertial1.setHeading(295, deg);
+  Inertial1.setHeading(243, deg);
   setDrivePosition(48, 6);
   wait (3, sec);
   Brain.resetTimer();
   trackingWheelPiston.set(false);
-  Right();
+  Left();
   trackingWheelPiston.set(true);
 }
 
@@ -204,12 +204,6 @@ void usercontrol(void) {
     //Stop intakes
     else {
       stopIntakes();
-    }
-
-
-      //Color sort toggle code:
-      if (Controller1.ButtonB.pressing()) {
-        
     }
 
     task::sleep(10);

@@ -13,6 +13,8 @@ void turnToHeading(double turnHeading, double turnPeriod);
 
 void driveInWithPiston(double driveDist, double DeployRange);
 
+void driveInWithPiston(double driveDist, double DeployRange, double pissPeriod);
+
 extern double constrainAngle(double x);
 
 extern double turnKP;
