@@ -87,12 +87,14 @@ void setIntakePiston() {
 }
 
 void runAuton() {
-  Inertial1.setHeading(243, deg);
-  setDrivePosition(48, 6);
+  setDriveConstants(3.0, 0.01, 0.0);
+  setTurnConstants(0.4075, 0.01, 0.79);
+  Inertial1.setHeading(skills_.selectedHeading(), deg);
+  setDrivePosition(skills_.selectedX(), skills_.selectedY());
   wait (3, sec);
   Brain.resetTimer();
   trackingWheelPiston.set(false);
-  Left();
+  Skills();
   trackingWheelPiston.set(true);
 }
 

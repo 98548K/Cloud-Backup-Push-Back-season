@@ -113,12 +113,12 @@ int rc_auto_loop_function_Controller1() {
 
 void auto_run() {
   Inertial1.calibrate();
-  runGPS1.suspend();
-  runGPS2.suspend();
+  //runGPS1.suspend();
+  //runGPS2.suspend();
   while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(149, deg);
-    X = -55;
-    Y = -24;
+    Inertial1.setHeading(skills_.selectedHeading(), deg);
+    X = skills_.selectedX();
+    Y = skills_.selectedY();
     Controller1.Screen.setCursor(0,0);
     Controller1.Screen.print("Calibrating");
   }
@@ -131,6 +131,6 @@ void vexcodeInit( void ) {
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
   Controller1.Screen.clearScreen();
-  //auto_run();
+  auto_run();
   Controller1.Screen.clearScreen();
 }

@@ -22,4 +22,4 @@ double initialize_auto::selectedHeading() {
 
 initialize_auto skills_ = initialize_auto(-55, -24, 149);
 initialize_auto right_ = initialize_auto(48, 6, 295);
-initialize_auto left_ = initialize_auto(48, -6, 295);
+initialize_auto left_ = initialize_auto(48, -6, 243);

@@ -1,8 +1,8 @@
 #include "vex.h"
 
 void autonomous(void) {
-    setDriveConstants(2.5, 0.9, 2.8);
-    setTurnConstants(0.36,0.16,3.8);
+    setDriveConstants(2.8, 0.0, 0);//setDriveConstants(2.8, 0.0011, 0);
+    setTurnConstants(0.33, 0.0, 0.79);//setTurnConstants(0.33, 0.000000001, 0.79);
     if (auton == "Skills") {
         Skills();
     }
@@ -62,7 +62,7 @@ void autonomous(void) {
     }
     else {
         Skills();
-        //turnToHeading(90);
+        //Left();
         //Drivetrain.driveFor(2,inches);
     }
 }

@@ -98,6 +98,7 @@ class PID {
         bool timerEnabled;
         bool isTurning;
         bool isDriving;
+        bool overShot;
     //PID class parameter setup:
     public:
         PID(double DesiredValue, bool IsDriving, bool IsTurning, bool TimerEnabled, double Timing, double DeployRange) {
@@ -118,6 +119,7 @@ class PID {
 
             storedHeading = Inertial1.heading(deg);
             while (true) {
+                overShot = (error < 0 && desiredValue > 0) || (error > 0 && desiredValue < 0);
                 //This simmulates drive PID starting at 0:
                 resetCurrentPosition = ((frontTracking.position(turns)) * (wheelRad * 2) * M_PI) - storedTrackingMeasurements;
 
@@ -126,7 +128,7 @@ class PID {
 
                 //PID math:
 
-                integral = 0;// += error;
+                integral += error;
                 //
 
                 
@@ -136,6 +138,11 @@ class PID {
                 else if (std::abs(integral * turnKI) > 30 && isTurning) {
                     integral = 30 / turnKI;
                 }
+
+                if (overShot) {
+                    integral = 0;
+                }
+
                 
 
                 //More PID math:
@@ -163,7 +170,7 @@ class PID {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = (error * kP) + (integral * kI) + (derivative * kD);
-                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * .6;
+                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.0;
                     RightDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) - turnPwr), pct);
                     LeftDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) + turnPwr), pct);
                     if (error == 0) break;
