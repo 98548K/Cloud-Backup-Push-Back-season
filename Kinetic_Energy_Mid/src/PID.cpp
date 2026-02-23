@@ -170,7 +170,7 @@ class PID {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = (error * kP) + (integral * kI) + (derivative * kD);
-                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.0;
+                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.3;
                     RightDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) - turnPwr), pct);
                     LeftDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) + turnPwr), pct);
                     if (error == 0) break;

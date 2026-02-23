@@ -156,6 +156,7 @@ int positionTracking() {
             Controller1.Screen.print(" ");
             Controller1.Screen.print(std::round(RB.temperature(pct)));
             std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
+            //std::cout << resetCurrentPosition << std::endl;
         }
         
 
@@ -165,8 +166,8 @@ int positionTracking() {
         offsetGPS2X = (GPS2.xPosition(inches)) + horizDist2 * cos(GPS2RadianHeading) - vertDist2 * sin(GPS2RadianHeading);
         offsetGPS2Y = (GPS2.yPosition(inches)) + horizDist2 * sin(GPS2RadianHeading) + vertDist2 * cos(GPS2RadianHeading);
 
-        //wait (25, msec);
-        task::sleep(10);
+        wait (10, msec);
+        //task::sleep(10);
         
     }
     return 0;

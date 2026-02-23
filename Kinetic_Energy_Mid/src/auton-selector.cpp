@@ -322,12 +322,12 @@ void touch() {
     }
 
     else if (quadrant == 1) {
-      autoVector = {"Right", "Empty2", "Empty3", "Empty4"};
+      autoVector = {"Right", "Right 7", "Empty3", "Empty4"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), 0, 0, 0);
-      beginX = startX(right_.selectedX(), 0, 0, 0);
-      beginY = startY(right_.selectedY(), 0, 0, 0);
+      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), 0, 0);
+      beginX = startX(right_.selectedX(), right_.selectedX(), 0, 0);
+      beginY = startY(right_.selectedY(), right_.selectedY(), 0, 0);
     }
 
     else if (quadrant == 2) {
@@ -339,12 +339,12 @@ void touch() {
       beginY = startY(left_.selectedY(), 0, 0, 0);
     }
     else if (quadrant == 3) {
-      autoVector = {"Right", "Empty10", "Empty11", "Empty12"};
+      autoVector = {"Right", "Right 7", "Empty11", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), 0, 0, 0);
-      beginX = startX(right_.selectedX(), 0, 0, 0);
-      beginY = startY(right_.selectedY(), 0, 0, 0);
+      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), 0, 0);
+      beginX = startX(right_.selectedX(), right_.selectedX(), 0, 0);
+      beginY = startY(right_.selectedY(), right_.selectedY(), 0, 0);
     }
     else if (quadrant == 4) {
       autoVector = {"Left", "Empty14", "Empty15", "Empty16"};

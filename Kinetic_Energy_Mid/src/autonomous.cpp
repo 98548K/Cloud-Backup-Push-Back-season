@@ -18,8 +18,8 @@ void autonomous(void) {
     else if (auton == "Left") {
         Left();
     }
-    else if (auton == "Blue 2 ring") {
-        
+    else if (auton == "Right 7") {
+        Right_7_Block();
     }
     else if (auton == "Blue 3 ring") {
         
@@ -61,7 +61,7 @@ void autonomous(void) {
         
     }
     else {
-        Skills();
+        Right_7_Block();
         //Left();
         //Drivetrain.driveFor(2,inches);
     }

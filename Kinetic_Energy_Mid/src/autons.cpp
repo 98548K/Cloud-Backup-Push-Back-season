@@ -14,12 +14,12 @@ int counter = 0;
 
 int parkJerk() {
     while (true) {
-        if (Inertial1.roll(deg) <= -4) {
+        if (Inertial1.roll(deg) <= -2) {
             hasEntered = true;
 
 
         }
-        else if (hasEntered == true && Inertial1.roll(deg) > 2) {
+        else if (hasEntered == true && Inertial1.roll(deg) > 0) {
             LeftDriveSmart.stop(coast);
             RightDriveSmart.stop(coast);
             DescorePiston.set(false);
@@ -79,24 +79,8 @@ vex::directionType wrapDir(double closestX, double closestY) {
 
 
 
-//task runGPS1 = task(readGPS1);
-
-
-//task runGPS2 = task(readGPS2);
-
-
-
-
-//"runGPS1.resume();" will set the odometry to track the GPS 1 offset readings
-//"runGPS2.resume();" will set the odometry to track the GPS 2 offset readings
-
 
 void Left() {
-    //runGPS1.suspend();
-    //runGPS2.suspend();
-    //setDriveConstants(3.0, 0.01, 0.0);
-  //setTurnConstants(0.4075, 0.0000013, 0.79);
-    //setTurnConstants(0.42, 0.0, 0.7);
     //Heading: 243
     //X: 48
     //Y: -6
@@ -122,39 +106,20 @@ void Left() {
     turnToHeading(95);
     driveIn(16, 1.3);
     driveToPosition(32, -40, reverse, 1.5);
-    
     TopIntakePiston.set(true);
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
 
-    /*
-    intakeFill();
-    turnToHeading(90);
-    driveIn(16, 1.7);
-    driveIn(-34, 2);
-    TopIntakePiston.set(true);
-    BackIntake.spin(reverse, 100, pct);
-    MiddleIntake.spin(fwd, 100, pct);
-    FrontIntake.spin(fwd, 100, pct);
-    DescorePiston.set(false);
-    driveIn(5);
-    TopIntakePiston.set(false);
-    driveIn(-15);
-    */
 }
 
 
 
 
 void Right() {
-    //runGPS1.suspend();
-    //runGPS2.suspend();
     //Heading: 295
     //X: 48
     //Y: 6
-    //setDriveConstants(3.0, 0.0, 0.0);
-    //setTurnConstants(0.42, 0.0, 0.7);
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
@@ -162,7 +127,7 @@ void Right() {
     turnToHeading(225);
     DescorePiston.set(false);
     BottomIntakePiston.set(true);
-    driveIn(17, 1.5);
+    driveIn(18, 1.5);
     FrontIntake.spin(reverse, 75, pct);
     MiddleIntake.spin(reverse, 100, pct);
     wait (1.25, sec);
@@ -171,17 +136,18 @@ void Right() {
     DescorePiston.set(true);
     stopIntakes();
     //Second part
-    driveToPosition(53, 38, fwd);
+    setDriveConstants(2.8, 0.0, 0);//setDriveConstants(2.8, 0.0011, 0);
+    setTurnConstants(0.33, 0.0, 0.79);//setTurnConstants(0.33, 0.000000001, 0.79);
+    turnToHeading(40);
+    driveIn(34);
     intakeFill();
+    turnTolerance = 0.75;
     turnToHeading(90);
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    //setDriveConstants(2.4, 0.01, 0.0);
-    driveIn(12, 1);
-    //setDriveConstants(3.0, 0.01, 0.0);
-  //setTurnConstants(0.4075, 0.0000013, 0.79);
-    turnToHeading(85, 0.6);
+    driveIn(16, 0.8);
+    turnToHeading(85, 0.8);
     driveIn(-100, 2);
     TopIntakePiston.set(true);
     MiddleIntake.spin(fwd, 100, pct);
@@ -190,17 +156,12 @@ void Right() {
     driveIn(5);
     TopIntakePiston.set(false);
     driveIn(-100, 1);
-    
 }
 
 void Right_7_Block() {
-    //runGPS1.suspend();
-    //runGPS2.suspend();
     //Heading: 295
     //X: 48
     //Y: 6
-    //setDriveConstants(3.0, 0.0, 0.0);
-    //setTurnConstants(0.42, 0.0, 0.7);
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
@@ -208,169 +169,119 @@ void Right_7_Block() {
     DescorePiston.set(true);
     stopIntakes();
     //Second part
-    driveToPosition(47, 43, fwd);
+    turnToHeading(40);
+    driveIn(30);
     intakeFill();
+    turnTolerance = 0.75;
     turnToHeading(90);
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    //setDriveConstants(2.4, 0.01, 0.0);
-    driveIn(12, 1);
-    //setDriveConstants(3.0, 0.01, 0.0);
-  //setTurnConstants(0.4075, 0.0000013, 0.79);
-    turnToHeading(85, 0.6);
+    driveIn(16, 0.8);
+    turnToHeading(80, 0.8);
     driveIn(-100, 2);
     TopIntakePiston.set(true);
     MiddleIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     wait (1, sec);
+    /*
     driveIn(5);
     TopIntakePiston.set(false);
     driveIn(-100, 1);
-    
-}
-
-
-
-
-void New_Right() {
-    //runGPS1.suspend();
-    //runGPS2.suspend();
-    //Heading: 294
-    //X: 55
-    //Y: 22
-    BackIntake.stop();
-    MiddleIntake.spin(fwd, 25, pct);
-    FrontIntake.spin(fwd, 100, pct);
-    driveIn(42);
-    turnToHeading(367);
-    MiddleIntake.stop();
-    driveIn(10, 1);
-    DescorePiston.set(true);
-    driveIn(-10);
+    */
 }
 
 
 
 void Skills() {
-    //runGPS1.suspend();
-    //runGPS2.suspend();
     task newTimer = task(runManualTimer);
     //Heading: 149
     //X: -55
     //Y: -24
-    //Deploys piston and lines up next to the matchloader
-    DescorePiston.set(true);
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
-    driveIn(29);
-    //Turns toward the matchloader
-    //wait (0.25, sec);
-    turnToHeading(270);
-    //setDriveConstants(2.0, 0.01, 0.0);
+    DescorePiston.set(true);            //Deploys piston and lines up next to the matchloader
+    driveIn(31.5);
+    turnToHeading(270);                 //Turns toward the matchloader
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 50, pct);
     BackIntake.stop();
-    driveIn(16, 2.6);//Drives into the matchloader
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
+    driveIn(15, 2.6);                   //Drives into the matchloader
     MiddleIntake.spin(fwd, 50, pct);
-    driveIn(-6);//Back away from matchloader
+    driveIn(-6);                        //Back away from matchloader
     FrontIntake.stop();
     MiddleIntake.stop();
     turnToHeading(300);
-    //Drive away from matchloader
-    driveIn(-17, 1.5);
+    driveIn(-20.5, 1.5);                //Drive away from matchloader
     Wing.set(true);
-    //Drive between goal and wall
     turnToHeading(275);
-    driveIn(-76);
-    //Line up with goal
+    driveIn(-72);                       //Drive Down Ally
     turnToHeading(0);
     driveTolerance = 0.25;
-    driveIn(9.5);//After corridor turn
+    driveIn(9.5);                         //After Ally turn
     driveTolerance = 0.5;
-   ////setTurnConstants(0.4, 0.01, 0.79);
     turnToHeading(90);
-    ////setTurnConstants(0.4075, 0.0000013, 0.79);
-    driveIn(-38, 1.3);
-    //Recalibrate Inertial
-    Inertial1.setHeading(90, deg);
-    //Score in long goal First Time
-    TopIntakePiston.set(true);
+    driveIn(-38, 1.3);                  //Backing up to score
+    Inertial1.setHeading(90, deg);      //Recalibrate Inertial
+    TopIntakePiston.set(true);          //Score in long goal First Time
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
-    wait (1, sec);
-    FrontIntake.spin(reverse, 100, pct);
+    wait (.75, sec);
+    FrontIntake.spin(reverse, 100, pct);//Outaking to UnJam
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(reverse, 100, pct);
     wait (.1, sec);
-    FrontIntake.spin(fwd, 100, pct);
+    FrontIntake.spin(fwd, 100, pct);    //Scoring once again
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
-    wait (1.25, sec);
+    wait (1.5, sec);
     BackIntake.stop();
     TopIntakePiston.set(false);
     BackIntake.spin(reverse, 3, pct);
-    //Empty second matchloader
-    driveIn(2);//weird turn to match loader
-    turnToHeading(88);
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
-    driveIn(27, 2);
-    turnToHeading(86, 2);
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
+    driveIn(2);
+    turnToHeading(88);                  //Turn to match loader
+    driveIn(27, 2.25);                  //Driving to matchloader and emptying it
+    turnToHeading(86, 2);               //Turn to line up with goal
     MiddleIntake.stop();
     BackIntake.stop();
     TopIntakePiston.set(true);
-    //setDriveConstants(2.25, 0.01, 0.0);
-    driveIn(-38, 2);
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
-    //Score in long goal
-    FrontIntake.spin(fwd, 100, pct);
+    FrontIntake.spin(reverse, 100, pct);
+    wait(0.1, sec);
+    driveIn(-38, 1.25);                 //Drive back to score again 🤞
+    FrontIntake.spin(fwd, 100, pct);    //Score in long goal
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
     wait (2, sec);
     BackIntake.stop();
     TopIntakePiston.set(false);
     setDrivePosition(35.5, -41);
-    DescorePiston.set(false);
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 25, pct);
     TopIntakePiston.set(true);
     BackIntake.stop();
-    //Drive across field
-    driveIn(8);
-    driveToPosition(49, 56, fwd);
+    driveIn(8);                         //Drive away from long goal
+    driveToPosition(50, 55, fwd);       //Drive across field
     TopIntakePiston.set(false);
-    DescorePiston.set(true);
-    ////setTurnConstants(0.4075, 0.0000013, 0.79);
-    turnToHeading(85);
+    turnToHeading(85);                  //Turn to Third Match loader
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 3, pct);
-    //setDriveConstants(2.0, 0.01, 3.3);
-    driveIn(20.5, 3);//Going to the Third Match Loader
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
-    driveIn(-6);
+    driveIn(20.5, 3);                   //Driving into Third Matchloader
+    driveIn(-6);                        //Backing away from Matchloader
     FrontIntake.stop();
     MiddleIntake.stop();
     BackIntake.stop();
-    turnToHeading(120);
-    driveIn(-18, 1.5);
-    turnToHeading(93);
+    turnToHeading(120);                 //Turning to wall
+    driveIn(-18, 1.5);                  //Driving to wall
+    turnToHeading(93);                  //Angle down Ally
     Wing.set(true);
-    driveIn(-74);//Going down the corridor
+    driveIn(-72);                       //Going down the Ally
     turnToHeading(180);
     driveIn(11);
     turnToHeading(270);
-    driveIn(-29, 1.5);//To the driver side of the long goal
-    Inertial1.setHeading(270, deg);
-    TopIntakePiston.set(true);
+    driveIn(-29, 1.5);                  //Lining up with the second long goal
+    Inertial1.setHeading(270, deg);      //recalabrating Inertial to 270
+    setDrivePosition(-32, 48);          //Setting odom
+    TopIntakePiston.set(true);          //Scoring in long goal first time on second long goal
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
@@ -378,35 +289,38 @@ void Skills() {
     BackIntake.stop();
     BackIntake.spin(reverse, 3, pct);
     TopIntakePiston.set(false);
-    driveToPosition(57, 47, fwd, 2.5);
-    driveToPosition(56, 30, reverse, 1.5);
+    driveIn(2, 1);                       //Drive away from goal to turn to fourth match loader
+    turnToHeading(269);                  //Turn to fourth Matchloader
+    driveIn(27,3);                       //Driving to Matchloader
+    driveIn(-10);                        //Driving away from matchloader
+    DescorePiston.set(false);
+    turnToHeading(225);                  //Turn to parkzone
+    trackingWheelPiston.set(true);
+    driveInWithPiston(36, 35.5);         //Drive to parkzone to park
+
+    /*
+    driveIn(2,1);
+    driveToPosition(-64, 40, fwd, 2.5);
     MiddleIntake.stop();
     BackIntake.stop();
     driveIn(-33, 1.5);//Back to the Long Goal the last time
     TopIntakePiston.set(true);
-    //runGPS2.resume();
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     wait (2, sec);
     BackIntake.stop();
-    //driveIn(5);
     TopIntakePiston.set(false);
-    //driveIn(-7, 1);
-    //runGPS2.suspend();
     DescorePiston.set(false);
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 25, pct);
-    //setDriveConstants(3.0, 0.01, 0.0);
-    //setTurnConstants(0.4075, 0.0000013, 0.79);
     TopIntakePiston.set(true);
     driveIn(8);
     turnToHeading(235);
     driveIn(30.5, 1.5);
     turnToHeading(200);
     trackingWheelPiston.set(true);
-    //setDriveConstants(3.5, 0.01, 0.0);
-    driveInWithPiston(16, 12, 1);
+    driveInWithPiston(12, 11, 1);*/
     task stopInParkZone = task(parkJerk);
     trackingWheelPiston.set(true);
     FrontIntake.spin(fwd, 100, pct);

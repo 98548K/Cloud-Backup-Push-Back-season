@@ -1,2 +1,2 @@
 bool enabledComp();
-extern task runGPS;
+extern competition Competition;
