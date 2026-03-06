@@ -7,7 +7,7 @@ using namespace std;
 //Horizontal distance from the side of the forward/backward tracking wheel to center:
 double horizontalTrackingCenter = -3.0;
 //Vertical distance from the side of the left/right tracking wheel to center:
-double verticalTrackingCenter = 4.0;
+double verticalTrackingCenter = 0.0;
 
 //Tracking wheel measurments in inches:
 double FRONT_WHEEL;
@@ -155,8 +155,7 @@ int positionTracking() {
             Controller1.Screen.print(std::round(LB.temperature(pct)));
             Controller1.Screen.print(" ");
             Controller1.Screen.print(std::round(RB.temperature(pct)));
-            std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
-            //std::cout << resetCurrentPosition << std::endl;
+            //std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
         }
         
 
@@ -183,8 +182,8 @@ int positionTracking() {
 //Pythagorean theorum solving for hypotenuse:
 
 double getDistance(double x1, double y1, double x2, double y2) {
-    double x_difference_squared = ((x2 - x1) * (x2 - x1));
-    double y_difference_squared = ((y2 - y1) * (y2 - y1));
+    double x_difference_squared = pow(x2 - x1, 2);
+    double y_difference_squared = pow(y2 - y1, 2);
     return sqrt(x_difference_squared + y_difference_squared);
 }
 

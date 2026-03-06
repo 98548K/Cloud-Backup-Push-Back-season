@@ -56,12 +56,12 @@ double constrainAngle(double x) {
 double returnSpeed;
 
 
-double slewLimit = 20;
+double slewLimit = 5;
 
 
 //If the delta speed is greater than the slew rate, the speed will be set to the previous speed plus slew rate cap:
 double slewRate(double output, double prevOutput, double error, double desiredValue) {
-    //Slew rate is slewRange% velocity
+    //Slew rate is slewLimit% velocity
     if (output > prevOutput + slewLimit && std::round(error) != desiredValue) {
         returnSpeed = prevOutput + (slewLimit);
     }
@@ -114,6 +114,7 @@ class PID {
         void run() {
             integral = 0;
             error = 0;
+            prevPwr = 0;
             //This accounts for the tracking wheel measuremants in PID:
             storedTrackingMeasurements = (frontTracking.position(turns)) * (wheelRad * 2) * M_PI;
 
@@ -170,7 +171,11 @@ class PID {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = (error * kP) + (integral * kI) + (derivative * kD);
-                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.3;
+                    if (pwr > 100) {
+                        pwr = 100;
+                    }
+                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5;
+                    //std::cout << slewRate(pwr, prevPwr, error, desiredValue) << std::endl;
                     RightDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) - turnPwr), pct);
                     LeftDriveSmart.spin(fwd, (slewRate(pwr, prevPwr, error, desiredValue) + turnPwr), pct);
                     if (error == 0) break;
@@ -188,13 +193,14 @@ class PID {
                 }
 
 
-                //Class initialization for driving with timer:
+                //Class initialization for driving with timer:b
                 else if (isDriving && timerEnabled) {
                     //This section is just drive PID:
                     error = desiredValue - resetCurrentPosition;
                     pwr = error * kP + integral * kI + derivative * kD;
-                    RightDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue), pct);
-                    LeftDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue), pct);
+                    turnPwr = constrainAngle(storedHeading - Inertial1.heading(deg)) * 0.5;
+                    RightDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue) - turnPwr, pct);
+                    LeftDriveSmart.spin(fwd, slewRate(pwr, prevPwr, error, desiredValue) + turnPwr, pct);
                     if (Brain.timer(sec) <= timing + 0.1 && Brain.timer(sec) >= timing - 0.1) break;
                 }
 
@@ -233,6 +239,7 @@ class PID {
 void driveIn(double driveDist) {
     PID drivePID(driveDist, true, false, false, 0, driveDist);
     drivePID.run();
+    //std::cout << resetCurrentPosition << std::endl;
 }
 
 //Turn PID function:
@@ -250,6 +257,7 @@ void driveIn(double driveDist, double drivePeriod) {
     PID timedDrivePID(driveDist, true, false, true, drivePeriod, driveDist);
     timedDrivePID.run();
     Brain.setTimer(Brain.timer(sec) + startTimer, sec);
+    //std::cout << resetCurrentPosition << std::endl;
 }
 
 //Turn PID with timer function:

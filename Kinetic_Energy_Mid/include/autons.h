@@ -17,3 +17,5 @@ void New_Right();
 void Skills();
 
 void Bad_Skills();
+
+void Odom_Right();

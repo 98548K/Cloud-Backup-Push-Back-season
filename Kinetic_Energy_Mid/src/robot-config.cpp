@@ -111,18 +111,6 @@ int rc_auto_loop_function_Controller1() {
  * This should be called at the start of your int main function.
  */
 
-void auto_run() {
-  Inertial1.calibrate();
-  //runGPS1.suspend();
-  //runGPS2.suspend();
-  while (Inertial1.isCalibrating()) {
-    Inertial1.setHeading(right_.selectedHeading(), deg);
-    X = right_.selectedX();
-    Y = right_.selectedY();
-    Controller1.Screen.setCursor(0,0);
-    Controller1.Screen.print("Calibrating");
-  }
-}
 
 
 void vexcodeInit( void ) {
@@ -130,7 +118,4 @@ void vexcodeInit( void ) {
   //Starting setup code here:
   frontTracking.setPosition(0, turns);
   sideTracking.setPosition(0, turns);
-  Controller1.Screen.clearScreen();
-  //auto_run();
-  Controller1.Screen.clearScreen();
 }

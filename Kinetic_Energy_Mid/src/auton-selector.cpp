@@ -295,6 +295,10 @@ void touch() {
       clear_menu();
       quadrant = 4;
     }
+    
+    if (auton == "[NULL]") {
+      auto_run();
+    }
 
     if (quadrant == 0) {
       clear_menu();
@@ -322,12 +326,12 @@ void touch() {
     }
 
     else if (quadrant == 1) {
-      autoVector = {"Right", "Right 7", "Empty3", "Empty4"};
+      autoVector = {"Right", "Right 7", "Right Odom", "Empty4"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), 0, 0);
-      beginX = startX(right_.selectedX(), right_.selectedX(), 0, 0);
-      beginY = startY(right_.selectedY(), right_.selectedY(), 0, 0);
+      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), right_odom_.selectedHeading(), 0);
+      beginX = startX(right_.selectedX(), right_.selectedX(), right_odom_.selectedX(), 0);
+      beginY = startY(right_.selectedY(), right_.selectedY(), right_odom_.selectedY(), 0);
     }
 
     else if (quadrant == 2) {
@@ -339,12 +343,12 @@ void touch() {
       beginY = startY(left_.selectedY(), 0, 0, 0);
     }
     else if (quadrant == 3) {
-      autoVector = {"Right", "Right 7", "Empty11", "Empty12"};
+      autoVector = {"Right", "Right 7", "Right Odom", "Empty12"};
       displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
       auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), 0, 0);
-      beginX = startX(right_.selectedX(), right_.selectedX(), 0, 0);
-      beginY = startY(right_.selectedY(), right_.selectedY(), 0, 0);
+      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), right_odom_.selectedHeading(), 0);
+      beginX = startX(right_.selectedX(), right_.selectedX(), right_odom_.selectedX(), 0);
+      beginY = startY(right_.selectedY(), right_.selectedY(), right_odom_.selectedY(), 0);
     }
     else if (quadrant == 4) {
       autoVector = {"Left", "Empty14", "Empty15", "Empty16"};
@@ -354,6 +358,7 @@ void touch() {
       beginX = startX(left_.selectedX(), 0, 0, 0);
       beginY = startY(left_.selectedY(), 0, 0, 0);
     }
+
     
     if (!enabledComp()) {
       if (Inertial1.isCalibrating()) {
@@ -381,6 +386,12 @@ void touch() {
       Brain.Screen.printAt(251, 140, "1           ");
       wait (1, sec);
       Brain.Screen.printAt(251, 140, "Calibrated");
+      //
+      /*Brain.Screen.drawImageFromFile("Image.png", 0, 0);
+      wait (3, sec);
+      Brain.Screen.clearScreen();
+      graphics();*/
+      //
       isCalibrated = false;
       ranOnce = true;
     }

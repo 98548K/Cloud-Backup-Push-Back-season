@@ -6,7 +6,14 @@ competition Competition;
 bool valid;
 
 bool enabledComp() {
-  if (Competition.isEnabled()) valid = true;
+  if (Competition.isEnabled()){
+    valid = true;
+    Controller1.ButtonY.pressed(setWing);
+    Controller1.ButtonRight.pressed(setDescore);
+    Controller1.ButtonDown.pressed(setIntakePiston);
+    Controller1.ButtonX.pressed(setSpeed);
+    Controller1.ButtonB.pressed(setColor);
+  }
   else if (!Competition.isEnabled()) valid = false;
 
   return valid;

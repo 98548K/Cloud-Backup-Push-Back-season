@@ -146,11 +146,6 @@ void usercontrol(void) {
     BackIntake.setVelocity(100, pct);
     trackingWheelPiston.set(true);
     //Button toggles
-    Controller1.ButtonY.pressed(setWing);
-    Controller1.ButtonRight.pressed(setDescore);
-    Controller1.ButtonDown.pressed(setIntakePiston);
-    Controller1.ButtonX.pressed(setSpeed);
-    Controller1.ButtonB.pressed(setColor);
 
 
   while (1) {

@@ -23,3 +23,11 @@ double initialize_auto::selectedHeading() {
 initialize_auto skills_ = initialize_auto(-55, -24, 149);
 initialize_auto right_ = initialize_auto(48, 6, 295);
 initialize_auto left_ = initialize_auto(48, -6, 243);
+initialize_auto right_odom_ = initialize_auto(-61.4, -25.5, 156.7);
+
+
+void auto_run() {
+    beginHeading = skills_.selectedHeading();
+    beginX = skills_.selectedX();
+    beginY = skills_.selectedY();
+}

@@ -1,5 +1,6 @@
 #pragma once
 
+void auto_run();
 class initialize_auto {
     private:
     double globalX, globalY, globalHeading;
@@ -13,3 +14,4 @@ class initialize_auto {
 extern initialize_auto skills_;
 extern initialize_auto right_;
 extern initialize_auto left_;
+extern initialize_auto right_odom_;

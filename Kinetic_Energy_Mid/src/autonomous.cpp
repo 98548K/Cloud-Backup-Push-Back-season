@@ -21,8 +21,8 @@ void autonomous(void) {
     else if (auton == "Right 7") {
         Right_7_Block();
     }
-    else if (auton == "Blue 3 ring") {
-        
+    else if (auton == "Right Odom") {
+        Odom_Right();
     }
     else if (auton == "Blue win pt") {
         
@@ -61,8 +61,6 @@ void autonomous(void) {
         
     }
     else {
-        Right_7_Block();
-        //Left();
-        //Drivetrain.driveFor(2,inches);
+        Skills();
     }
 }

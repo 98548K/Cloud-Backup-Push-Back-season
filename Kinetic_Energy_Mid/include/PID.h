@@ -15,6 +15,8 @@ void driveInWithPiston(double driveDist, double DeployRange);
 
 void driveInWithPiston(double driveDist, double DeployRange, double pissPeriod);
 
+extern double slewRate(double output, double prevOutput, double error, double desiredValue);
+
 extern double constrainAngle(double x);
 
 extern double turnKP;
