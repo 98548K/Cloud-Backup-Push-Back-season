@@ -1,0 +1,1 @@
+To configure auto run, go to auton-initialization, and change the contents of the auto_run function to [auton name]_. do this for the selectedX, selectedY, and selectedHeading. After this, go the the else statement and change the name of the auton to the matching name in autons.cpp. If there are any further questions, contact the Kasen.
