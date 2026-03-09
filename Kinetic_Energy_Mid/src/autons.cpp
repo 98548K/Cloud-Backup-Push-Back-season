@@ -11,10 +11,9 @@ bool hasEntered = false;
 
 int counter = 0;
 
-
 int parkJerk() {
     while (true) {
-        if (Inertial1.roll(deg) <= -5) {
+        if (Inertial1.roll(deg) <= -4) {
             hasEntered = true;
         }
         else if (hasEntered == true && Inertial1.roll(deg) > 0) {
@@ -34,7 +33,7 @@ int runManualTimer() {
     while (true) {
         counter += 1;
         wait (1, sec);
-        std::cout << counter << std::endl;
+        //std::cout << counter << std::endl;
     }
     return 0;
 }
@@ -109,7 +108,7 @@ void Left() {
     wait(1, sec);
     TopIntakePiston.set(false);
     BackIntake.stop();
-    driveToPosition(49, -44.5, fwd);
+    driveToPosition(49, -40.5, fwd);
     turnToHeading(90);
     driveIn(16, 1.3);
     LeftDriveSmart.spin(reverse, 100, pct);
@@ -150,7 +149,7 @@ void Right() {
     setDriveConstants(2.8, 0.0, 0);
     setTurnConstants(0.43, 0.0, 0.79);
     turnToHeading(40);
-    driveIn(36);
+    driveIn(37.5);
     intakeFill();
     turnTolerance = 0.75;
     setTurnConstants(0.4, 0.0, 0.79);
@@ -158,7 +157,7 @@ void Right() {
     BackIntake.stop();
     MiddleIntake.spin(fwd, 25, pct);
     FrontIntake.spin(fwd, 100, pct);
-    driveIn(18, 0.65);
+    driveIn(17, 0.65);
     turnToHeading(85, 0.8);
     driveIn(-100, 1.5);
     TopIntakePiston.set(true);
@@ -251,12 +250,12 @@ void Skills() {
     FrontIntake.spin(fwd, 100, pct);
     MiddleIntake.spin(fwd, 50, pct);
     BackIntake.stop();
-    driveIn(15, 2);                   //Drives into the matchloader
+    driveIn(15.5, 2);                   //Drives into the matchloader
     oscillate(4);
     driveIn(5,0.5);
     oscillate(4);
     wait (1, sec);
-    MiddleIntake.spin(fwd, 50, pct);
+    MiddleIntake.spin(fwd, 30, pct);
     driveIn(-6);                        //Back away from matchloader
     FrontIntake.stop();
     MiddleIntake.stop();
@@ -271,7 +270,7 @@ void Skills() {
     driveTolerance = 0.5;
     turnToHeading(90);
     DescorePiston.set(false);
-    driveIn(-30, 1.3);
+    driveIn(-30, 1.4);
     LeftDriveSmart.spin(reverse, 100, pct);
     RightDriveSmart.spin(reverse, 100, pct);
     DescorePiston.set(true);
@@ -298,19 +297,21 @@ void Skills() {
     oscillate(4);
     driveIn(5,0.5);
     oscillate(4);
+    MiddleIntake.stop();
     driveIn(-5);
     turnToHeading(90);
-    TopIntakePiston.set(true);
+    TopIntakePiston.set(false);
     turnTolerance = 0.5;
-    driveToPosition(45, -41, reverse);             //Turn to line up with goal
+    driveToPosition(45, -41, reverse);
+    TopIntakePiston.set(false);             //Turn to line up with goal
     turnTolerance = 1;
     MiddleIntake.spin(fwd, 50, pct);
-    BackIntake.stop();
+    BackIntake.spin(reverse, 3, pct);
     FrontIntake.spin(fwd, 100, pct);
     wait(0.1, sec);
-    turnToHeading(90);
+    turnToHeading(89);
+    TopIntakePiston.set(true); 
     driveIn(-38, 1.25);                 //Drive back to score again 🤞
-    TopIntakePiston.set(true);          //Score in long goal First Time
     FrontIntake.spin(fwd, 100, pct);
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
@@ -318,7 +319,7 @@ void Skills() {
     FrontIntake.spin(reverse, 100, pct);//Outtaking to UnJam
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(reverse, 100, pct);
-    wait (.1, sec);
+    wait (.5, sec);
     FrontIntake.spin(fwd, 100, pct);    //Scoring once again
     BackIntake.spin(reverse, 100, pct);
     MiddleIntake.spin(fwd, 100, pct);
@@ -329,13 +330,15 @@ void Skills() {
     driveIn(8);                         //Drive away from long goal
 
     //Temporary 48 from here
-    driveToPosition(43.5, -20, fwd);
+    driveToPosition(40, -20, fwd);
     DescorePiston.set(false);
-    turnToHeading(270);
+    turnToHeading(268);
+    BackIntake.spin(fwd, 100, pct);
     driveIn(110, 5);
     turnToHeading(350);
-    FrontIntake.spin(reverse, 100, pct);
-    MiddleIntake.spin(reverse, 100, pct);
+    FrontIntake.spin(fwd, 100, pct);
+    MiddleIntake.spin(fwd, 100, pct);
+    driveIn(1, 1);
 
 
 

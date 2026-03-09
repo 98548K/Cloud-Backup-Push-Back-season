@@ -11,6 +11,7 @@
 #include <string>
 #include <tuple>
 #include <numeric>
+#include <map>
 
 #include "v5.h"
 #include "v5_vcs.h"

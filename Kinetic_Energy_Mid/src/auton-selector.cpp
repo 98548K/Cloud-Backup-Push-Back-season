@@ -327,39 +327,44 @@ void touch() {
 
     else if (quadrant == 1) {
       autoVector = {"Right", "Right 7", "Right Odom", "Empty4"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), right_odom_.selectedHeading(), 0);
-      beginX = startX(right_.selectedX(), right_.selectedX(), right_odom_.selectedX(), 0);
-      beginY = startY(right_.selectedY(), right_.selectedY(), right_odom_.selectedY(), 0);
     }
 
     else if (quadrant == 2) {
       autoVector = {"Left", "Empty6", "Empty7", "Empty8"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(left_.selectedHeading(), 0, 0, 0);
-      beginX = startX(left_.selectedX(), 0, 0, 0);
-      beginY = startY(left_.selectedY(), 0, 0, 0);
     }
     else if (quadrant == 3) {
       autoVector = {"Right", "Right 7", "Right Odom", "Empty12"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(right_.selectedHeading(), right_.selectedHeading(), right_odom_.selectedHeading(), 0);
-      beginX = startX(right_.selectedX(), right_.selectedX(), right_odom_.selectedX(), 0);
-      beginY = startY(right_.selectedY(), right_.selectedY(), right_odom_.selectedY(), 0);
     }
     else if (quadrant == 4) {
       autoVector = {"Left", "Empty14", "Empty15", "Empty16"};
-      displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
-      beginHeading = startHeading(left_.selectedHeading(), 0, 0, 0);
-      beginX = startX(left_.selectedX(), 0, 0, 0);
-      beginY = startY(left_.selectedY(), 0, 0, 0);
     }
 
     
+    displayOptions(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
+    auton = setAuton(autoVector[0], autoVector[1], autoVector[2], autoVector[3]);
+    //Depending on the name of the auton configures starting heading
+    beginHeading = startHeading(
+      linkedAutons.at(autoVector[0]).selectedHeading(), 
+      linkedAutons.at(autoVector[1]).selectedHeading(), 
+      linkedAutons.at(autoVector[2]).selectedHeading(), 
+      linkedAutons.at(autoVector[4]).selectedHeading()
+    );
+    //Depending on the name of the auton configures starting x
+    beginX = startX(
+      linkedAutons.at(autoVector[0]).selectedX(), 
+      linkedAutons.at(autoVector[1]).selectedX(), 
+      linkedAutons.at(autoVector[2]).selectedX(), 
+      linkedAutons.at(autoVector[4]).selectedX()
+    );
+    //Depending on the name of the auton configures starting y
+    beginY = startY(
+      linkedAutons.at(autoVector[0]).selectedY(), 
+      linkedAutons.at(autoVector[1]).selectedY(), 
+      linkedAutons.at(autoVector[2]).selectedY(), 
+      linkedAutons.at(autoVector[4]).selectedY()
+    );
+
+
     if (!enabledComp()) {
       if (Inertial1.isCalibrating()) {
         Inertial1.setHeading(beginHeading, deg);
@@ -399,8 +404,6 @@ void touch() {
     
   }
 }
-
-
 void selectable() {
   graphics();
   touch();

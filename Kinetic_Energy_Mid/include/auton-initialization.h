@@ -15,3 +15,5 @@ extern initialize_auto skills_;
 extern initialize_auto right_;
 extern initialize_auto left_;
 extern initialize_auto right_odom_;
+
+extern std::map<const char*, initialize_auto> linkedAutons;

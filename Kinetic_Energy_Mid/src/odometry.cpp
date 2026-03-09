@@ -155,7 +155,7 @@ int positionTracking() {
             Controller1.Screen.print(std::round(LB.temperature(pct)));
             Controller1.Screen.print(" ");
             Controller1.Screen.print(std::round(RB.temperature(pct)));
-            //std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
+            std::cout << "X: " << X << " Y: " << Y << " Heading: " << Inertial1.heading(deg) << std::endl;
         }
         
 
