@@ -1,8 +1,7 @@
+#pragma once
+
 //extern vex::task runGPS1;
 //extern vex::task runGPS2;
-extern double beginHeading;
-extern double beginX;
-extern double beginY;
 
 extern int counter;
 

@@ -1,10 +1,6 @@
 #include "vex.h"
 
 
-double beginHeading;
-double beginX;
-double beginY;
-
 
 bool hasEntered = false;
 

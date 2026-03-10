@@ -24,7 +24,6 @@ int main() {
   Competition.drivercontrol(usercontrol);
   task odomTask = task(positionTracking);
   pre_auton();
-
   while (true) {
     wait(100, msec);
   }
